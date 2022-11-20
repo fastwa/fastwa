@@ -1,0 +1,20 @@
+{
+  "name": "@playwa/platform-socket",
+  "version": "1.0.0",
+  "description": "Lightweight and powerfull framework (@platform-socket)",
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.4.0",
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@hapi/boom": "^10.0.0"
+  },
+  "peerDependencies": {
+    "@playwa/common": "^1.0.0",
+    "@playwa/core": "^1.0.0"
+  },
+  "gitHead": "f7181691f491f2678e0a1f19dfd9c693a4977309"
+}

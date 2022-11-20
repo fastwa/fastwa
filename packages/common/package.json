@@ -1,0 +1,14 @@
+{
+  "name": "@playwa/common",
+  "version": "1.0.0",
+  "description": "Lightweight and powerfull framework (@common)",
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.12"
+  },
+  "gitHead": "f7181691f491f2678e0a1f19dfd9c693a4977309"
+}

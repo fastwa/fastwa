@@ -1,0 +1,19 @@
+{
+  "name": "@playwa/core",
+  "version": "1.0.0",
+  "description": "Lightweight and powerfull framework (@core)",
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@playwa/common": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@playwa/common": "1.0.0",
+    "@playwa/platform-socket": "1.0.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "gitHead": "f7181691f491f2678e0a1f19dfd9c693a4977309"
+}

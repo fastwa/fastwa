@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "types": ["node"],
+    "target": "es2017",
+    "module": "commonjs",
+    "noLib": false,
+    "strict": true,
+    "allowJs": false,
+    "composite": true,
+    "sourceMap": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "importHelpers": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noUnusedLocals": false,
+    "strictNullChecks": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "useUnknownInCatchVariables": false,
+    "suppressImplicitAnyIndexErrors": true
+  }
+}

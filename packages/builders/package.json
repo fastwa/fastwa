@@ -1,0 +1,22 @@
+{
+  "name": "@playwa/builders",
+  "version": "1.0.0",
+  "description": "Lightweight and powerfull framework (@builders)",
+  "keywords": [],
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.4.0",
+    "axios": "^1.1.3",
+    "node-webpmux": "^3.1.3",
+    "sharp": "^0.31.2",
+    "util": "^0.12.5"
+  },
+  "devDependencies": {
+    "@types/sharp": "^0.31.0"
+  },
+  "gitHead": "f7181691f491f2678e0a1f19dfd9c693a4977309"
+}

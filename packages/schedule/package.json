@@ -1,0 +1,20 @@
+{
+  "name": "@playwa/schedule",
+  "version": "1.0.0",
+  "description": "Lightweight and powerfull framework (@schedule)",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "dependencies": {
+    "cron": "^2.1.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cron": "^2.0.0",
+    "@types/uuid": "^8.3.4"
+  },
+  "gitHead": "f7181691f491f2678e0a1f19dfd9c693a4977309"
+}

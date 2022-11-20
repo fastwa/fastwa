@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": ".",
+    "paths": {
+      "@playwa/common": ["../common"],
+      "@playwa/common/*": ["../common/*"],
+      "@playwa/builders": ["../builders"],
+      "@playwa/builders/*": ["../core/*"],
+    }
+  },
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "../common/tsconfig.build.json"
+    }
+  ]
+}

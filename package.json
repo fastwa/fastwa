@@ -1,0 +1,44 @@
+{
+  "name": "@playwa/core",
+  "author": "Natan Rodrigues",
+  "description": "Lightweight and powerfull framework",
+  "license": "GPL3",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/playwa/playwa"
+  },
+  "scripts": {
+    "build": "tsc -b -v packages",
+    "clean": "tsc -b --clean packages",
+    "format": "prettier '**/*.ts' --ignore-path .prettierignore --write"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.4.0",
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@hapi/boom": "^9.1.4",
+    "axios": "^0.27.2",
+    "pino": "^8.7.0",
+    "qrcode-terminal": "^0.12.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-node-dev": "^1.1.8",
+    "util": "^0.12.5",
+    "uuid": "9.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "lerna": "^6.0.3",
+    "prettier": "^2.7.1",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
