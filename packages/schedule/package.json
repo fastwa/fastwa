@@ -1,0 +1,25 @@
+{
+  "name": "@fastwa/schedule",
+  "version": "0.0.1",
+  "description": "Lightweight and powerfull framework (@schedule)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwa/fastwa"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "dependencies": {
+    "cron": "^2.1.0",
+    "tslib": "2.4.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cron": "^2.0.0",
+    "@types/uuid": "^8.3.4"
+  },
+  "gitHead": "f24debef58f51b07549229a29df3e44e68f626ab"
+}

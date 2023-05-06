@@ -1,0 +1,20 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./builders/tsconfig.build.json"
+    },
+    {
+      "path": "./common/tsconfig.build.json"
+    },
+    {
+      "path": "./core/tsconfig.build.json"
+    },
+    {
+      "path": "./client/tsconfig.build.json"
+    },
+    {
+      "path": "./schedule/tsconfig.build.json"
+    }
+  ]
+}

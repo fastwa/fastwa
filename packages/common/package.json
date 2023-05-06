@@ -1,0 +1,21 @@
+{
+  "name": "@fastwa/common",
+  "version": "0.0.1",
+  "description": "Lightweight and powerfull framework (@common)",
+  "author": "Natan Rodrigues",
+  "license": "GPL3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwa/fastwa"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tslib": "2.4.1"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.12"
+  },
+  "gitHead": "f24debef58f51b07549229a29df3e44e68f626ab"
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": ".",
+    "paths": {
+      "@fastwa/common": ["./"],
+      "@fastwa/common/*": ["./*"],
+    }
+  },
+  "exclude": ["node_modules", "dist"],
+  "references": []
+}

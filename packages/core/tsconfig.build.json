@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": ".",
+    "rootDir": ".",
+    "paths": {
+      "@fastwa/common": ["../common"],
+      "@fastwa/common/*": ["../common/*"],
+      "@fastwa/core": ["../core"],
+      "@fastwa/core/*": ["../core/*"],
+      "@fastwa/client": ["../client"],
+      "@fastwa/client/*": ["../client/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "../common/tsconfig.build.json"
+    }
+  ]
+}
