@@ -32,18 +32,7 @@ Please check [@fastwa/example](https://github.com/fastwa/example) to see an exam
 * To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). 📚
 
 ## Contributing
-
-Want to contribute? Great!
-
-To fix a bug or enhance an existing module, follow these steps:
-
-* Fork the repo
-* Create a new branch (`git checkout -b feature/wobble-hat`)
-* Make the appropriate changes in the files
-* Add changes to reflect the changes made
-* Commit your changes (`git commit -m 'feat: add hat wobble'`)
-* Push to the branch (`git push origin feature/wobble-hat`)
-* Create a Pull Request
+Please read our [CONTRIBUTING](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md).
 
 Help us keep **fastwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
 
@@ -54,6 +43,7 @@ Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
 
 * Author - [Natan Rodrigues](https://github.com/Nata4n)
 * E-mail - [natanrce@proton.me](mailto:natanrce@proton.me)
+* Website - [fastwa.org](https://fastwa.org)
 
 ## License
 
