@@ -47,4 +47,4 @@ Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
 
 ## License
 
-Distributed under the GNU 3.0 License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
+Distributed under the GPL 3.0 License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
