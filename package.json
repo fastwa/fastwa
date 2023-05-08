@@ -35,7 +35,7 @@
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "lerna": "^6.0.3",
+    "lerna": "^6.6.2",
     "lerna-changelog": "^2.2.0",
     "prettier": "^2.8.8",
     "tsconfig-paths": "^4.0.0",
