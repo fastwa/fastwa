@@ -32,8 +32,10 @@ Please check [@fastwa/example](https://github.com/fastwa/example) to see an exam
 * To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). 📚
 
 ## Contributing
-Please read our [CONTRIBUTING](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md).
+### Contributing Guidelines
+Read through our [contributing guidelines](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md) to learn about our submission process, coding rules, and more.
 
+### Code of Conduct
 Help us keep **fastwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
 
 ## Acknowledgments
