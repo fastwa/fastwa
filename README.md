@@ -6,7 +6,7 @@
 
 <p align="center">
   <p align="center">
-   Lightweight and full-featured TypeScript framework for building <a href="http://web.whatsapp.com/" target="blank">Whatsapp</a> applications.
+   Lightweight and full-featured framework for building <a href="http://web.whatsapp.com/" target="blank">Whatsapp</a> applications.
     <br/>
     <br/>
   </p>
