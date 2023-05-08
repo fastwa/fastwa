@@ -15,7 +15,7 @@
     "tslib": "2.4.1"
   },
   "devDependencies": {
-    "@fastwa/common": "^0.0.1"
+    "@fastwa/common": "0.0.1"
   },
   "peerDependencies": {
     "@fastwa/client": "^0.0.1",
