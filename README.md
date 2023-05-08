@@ -28,6 +28,9 @@ Fastwa is an open source project and an excellent way if you want an easy start.
 ## Example
 Please check [@fastwa/example](https://github.com/fastwa/example) to see an example usage.
 
+## Getting started
+* To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). 📚
+
 ## Contributing
 
 Want to contribute? Great!
