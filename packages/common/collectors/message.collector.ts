@@ -1,9 +1,4 @@
-import { 
-  MessageUpsertType, 
-  WAMessage, 
-  WASocket 
-} from '@adiwajshing/baileys';
-
+import { MessageUpsertType, WAMessage, WASocket } from '@adiwajshing/baileys';
 import { WAEvent } from '../enums';
 
 interface IMessagesUpsertEvent {
@@ -19,7 +14,7 @@ export function createMessageCollector(
   timeout: number,
   filter: FilterCallback
 ): Promise<WAMessage> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const onMessage = ({ messages }: IMessagesUpsertEvent) => {
       const msg = messages[0];
       const isFromRemoteJid = msg.key.remoteJid === remoteJid;
@@ -28,7 +23,7 @@ export function createMessageCollector(
         socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessage);
         resolve(msg);
       }
-    }
+    };
 
     socket.ev.on(WAEvent.MESSAGES_UPSERT, onMessage);
 

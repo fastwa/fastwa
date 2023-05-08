@@ -21,5 +21,5 @@ export enum WAEvent {
   GROUP_PARTICIPANTS_UPDATE = 'group-participants.update',
   BLOCKLIST_SET = 'blocklist.set',
   BLOCKLIST_UPDATE = 'blocklist.update',
-  CALL = 'call',
+  CALL = 'call'
 }

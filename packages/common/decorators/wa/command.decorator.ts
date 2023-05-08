@@ -2,13 +2,9 @@ import 'reflect-metadata';
 
 import { WAEvent } from '@fastwa/common';
 import { InteractionType } from '@fastwa/common/enums/interaction-type.enum';
+import { COMMAND_METADATA, TYPE_METADATA } from '../../constants';
 
-import { 
-  COMMAND_METADATA,
-  TYPE_METADATA,
-} from '../../constants';
-
-import { BaileysEventMap } from '@adiwajshing/baileys'
+import { BaileysEventMap } from '@adiwajshing/baileys';
 
 export interface ICommandMetadata {
   name?: string | string[];
@@ -22,43 +18,41 @@ export interface IEventMetadata {
 
 const defaultMetadata = {
   name: '',
-  type: InteractionType.COMMAND,
-}
+  type: InteractionType.COMMAND
+};
 
 export const commandMapping = (
   metadata: ICommandMetadata = defaultMetadata
 ): MethodDecorator => {
-  const {
-    type,
-    name,
-  } = metadata
+  const { type, name } = metadata;
 
   return (target, key, descriptor) => {
     Reflect.defineMetadata(COMMAND_METADATA, name, descriptor.value);
     Reflect.defineMetadata(TYPE_METADATA, type, descriptor.value);
 
-    return descriptor
-  }
-} 
+    return descriptor;
+  };
+};
 
-export const commandDecoratorFactory = (method: InteractionType) =>
-  (name: string | string[]) => {
+export const commandDecoratorFactory =
+  (method: InteractionType) => (name: string | string[]) => {
     return commandMapping({
       name,
-      type: method,
+      type: method
     });
-}
+  };
 
-export const eventDecoratorFactory = (method: InteractionType) =>
+export const eventDecoratorFactory =
+  (method: InteractionType) =>
   (property: keyof BaileysEventMap<any> | WAEvent) => {
     return commandMapping({
       name: property,
-      type: method,
+      type: method
     });
-}
+  };
 
 export const Command = commandDecoratorFactory(InteractionType.COMMAND);
 
-export const On   = eventDecoratorFactory(InteractionType.ON);
+export const On = eventDecoratorFactory(InteractionType.ON);
 
 export const Button = commandDecoratorFactory(InteractionType.BUTTON);

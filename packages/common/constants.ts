@@ -1,7 +1,7 @@
 export const MODULE_METADATA = {
   IMPORTS: 'imports',
   PROVIDERS: 'providers',
-  CONTROLLERS: 'controllers',
+  CONTROLLERS: 'controllers'
 };
 export const TYPE_METADATA = 'type';
 export const EVENT_METADATA = 'event';

@@ -3,5 +3,5 @@ export enum WAPresence {
   UNAVALIABLE = 'unavailable',
   COMPOSING = 'composing',
   RECORDING = 'recording',
-  PAUSED = 'paused',
-};
+  PAUSED = 'paused'
+}

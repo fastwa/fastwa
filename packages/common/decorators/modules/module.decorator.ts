@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import { IModuleMetaData } from '@fastwa/common';
 
 export function Module(moduleMetaData: IModuleMetaData) {

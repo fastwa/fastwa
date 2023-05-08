@@ -1,5 +1,5 @@
-import { isFunction } from "@fastwa/common";
-import { Module } from "../injector";
+import { isFunction } from '@fastwa/common';
+import { Module } from '../injector';
 
 export const hasOnModuleInitHook = (instance: any) => {
   return isFunction(instance.onModuleInit);

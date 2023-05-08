@@ -1,9 +1,4 @@
-import {
-  Type,
-  ICommand,
-  IController,
-  IProvider
-} from '@fastwa/common';
+import { Type, ICommand, IController, IProvider } from '@fastwa/common';
 
 import { Module } from './module';
 import { AbstractWAClient } from '../adapters';
@@ -41,24 +36,24 @@ export class WAContainer {
   }
 
   public addEvent(name: string, event: ICommand) {
-    this.collection.addEvent(name, event)
-    return event
+    this.collection.addEvent(name, event);
+    return event;
   }
 
   public addCommand(name: string, command: ICommand) {
-    this.collection.addCommand(name, command)
-    return command
+    this.collection.addCommand(name, command);
+    return command;
   }
 
   public addButton(name: string, button: ICommand) {
-    this.collection.addButton(name, button)
-    return button
+    this.collection.addButton(name, button);
+    return button;
   }
 
   public addModule(target: Type<any>) {
     const moduleRef = new Module(target);
-    this.modules.set(target.name, moduleRef)
-    return moduleRef
+    this.modules.set(target.name, moduleRef);
+    return moduleRef;
   }
 
   public addImport(module: Module, moduleName: string) {

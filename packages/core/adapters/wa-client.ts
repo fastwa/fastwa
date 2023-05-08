@@ -1,4 +1,4 @@
-import { WASocket } from "@adiwajshing/baileys";
+import { WASocket } from '@adiwajshing/baileys';
 
 export abstract class AbstractWAClient {
   public socket: WASocket;

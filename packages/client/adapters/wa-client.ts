@@ -3,15 +3,15 @@ import pino from 'pino';
 import makeWASocket, {
   DisconnectReason,
   BaileysEvent,
-  WASocket,
-} from "@adiwajshing/baileys";
+  WASocket
+} from '@adiwajshing/baileys';
 
-import { 
+import {
   WAEvent,
   WAOptions,
   LogLevels,
   ICommand,
-  WAConnectionState,
+  WAConnectionState
 } from '@fastwa/common';
 
 import {
@@ -27,15 +27,12 @@ import { Boom } from '@hapi/boom';
 export class WAClient extends AbstractWAClient {
   socket: WASocket;
   options: WAOptions;
-  
+
   messageProxy: MessageProxy;
   messageFactory: MessageFactory;
   responseController: ResponseController;
 
-  constructor(
-    options: WAOptions,
-    private readonly container: WAContainer,
-  ) {
+  constructor(options: WAOptions, private readonly container: WAContainer) {
     super();
 
     this.options = options;
@@ -46,24 +43,20 @@ export class WAClient extends AbstractWAClient {
   }
 
   initSocketClient(restartRequired?: boolean) {
-    const {
-      saveCreds,
-      ...options
-    } = this.options;
+    const { saveCreds, ...options } = this.options;
 
     this.socket = makeWASocket({
       ...options,
-      logger: pino({ level: LogLevels.SILENT }),
+      logger: pino({ level: LogLevels.SILENT })
     });
 
     if (restartRequired) {
-      this.listen()
+      this.listen();
     }
-    
+
     this.useSaveCreds(saveCreds);
   }
-  
-  
+
   listen() {
     this.connectToWhatsapp();
 
@@ -72,32 +65,30 @@ export class WAClient extends AbstractWAClient {
       this.container.getButtons()
     );
 
-    this.listenEvents(
-      this.container.getEvents()
-    );
+    this.listenEvents(this.container.getEvents());
   }
 
   connectToWhatsapp() {
-    this.socket.ev.on(WAEvent.CONNECTION_UPDATE, async ({
-      connection,
-      lastDisconnect,
-    }) => {
-      if (connection === WAConnectionState.CLOSE) {
-        const statusCode = (lastDisconnect.error as Boom)?.output?.statusCode
-        
-        const isLogoutOrRestart =
-          statusCode === DisconnectReason.loggedOut ||
-          statusCode === DisconnectReason.restartRequired;
+    this.socket.ev.on(
+      WAEvent.CONNECTION_UPDATE,
+      async ({ connection, lastDisconnect }) => {
+        if (connection === WAConnectionState.CLOSE) {
+          const statusCode = (lastDisconnect.error as Boom)?.output?.statusCode;
 
-        if (isLogoutOrRestart) {
+          const restartRequired =
+            statusCode === DisconnectReason.loggedOut ||
+            statusCode === DisconnectReason.restartRequired;
+
+          if (restartRequired) {
             this.initSocketClient(true);
           }
         }
-      });
+      }
+    );
   }
 
   useSaveCreds(saveCreds: () => Promise<any>) {
-    this.socket.ev.on(WAEvent.CREDS_UPDATE, saveCreds)
+    this.socket.ev.on(WAEvent.CREDS_UPDATE, saveCreds);
   }
 
   listenCommands(
@@ -109,10 +100,10 @@ export class WAClient extends AbstractWAClient {
     this.socket.ev.on(WAEvent.MESSAGES_UPSERT, async ({ messages }) => {
       const msg = messages[0];
 
-      const content = 
+      const content =
         msg.message?.templateButtonReplyMessage?.selectedId ||
-        this.messageFactory.getMessageContent(msg)
-        
+        this.messageFactory.getMessageContent(msg);
+
       const interaction = this.responseController.getInteraction(
         content,
         collection
@@ -126,25 +117,14 @@ export class WAClient extends AbstractWAClient {
       const result = await fnHandler(msg);
 
       if (result) {
-        this.responseController.reply(
-          this.socket,
-          msg.key.remoteJid,
-          result
-        );
+        this.responseController.reply(this.socket, msg.key.remoteJid, result);
       }
     });
   }
 
   listenEvents(events: Map<string, ICommand>) {
-    events.forEach(({
-      command,
-      instance,
-      callback,
-    }) => {
-      this.socket.ev.on(
-        command as BaileysEvent,
-        callback.bind(instance),
-      );
+    events.forEach(({ command, instance, callback }) => {
+      this.socket.ev.on(command as BaileysEvent, callback.bind(instance));
     });
   }
 }

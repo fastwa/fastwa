@@ -3,11 +3,10 @@ export function createNullArray(length: number) {
 }
 
 export function mergeKeysAndValues(keys: string[], values: any[]) {
-  // TO REMOVE ?.
-  return keys?.reduce((acc, curr, index) => {
+  return keys.reduce((acc, curr, index) => {
     return {
       ...acc,
-      [curr]: values[index],
+      [curr]: values[index]
     };
   }, {});
 }

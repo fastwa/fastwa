@@ -1,7 +1,4 @@
-import { 
-  IProvider, 
-  IController 
-} from '@fastwa/common';
+import { IProvider, IController } from '@fastwa/common';
 
 export class Module {
   private readonly _imports = new Set<Module>();
@@ -36,8 +33,8 @@ export class Module {
       metatype: provider,
       instance: null
     });
-    
-    return provider
+
+    return provider;
   }
 
   public addController(controller: IController) {
@@ -47,6 +44,6 @@ export class Module {
       instance: null
     });
 
-    return controller
+    return controller;
   }
 }

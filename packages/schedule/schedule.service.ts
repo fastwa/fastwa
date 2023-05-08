@@ -1,11 +1,7 @@
 import { v4 } from 'uuid';
 import { CronJob } from 'cron';
 
-import {
-  Injectable,
-  OnBootstrap,
-  Type
-} from "@fastwa/common";
+import { Injectable, OnBootstrap, Type } from '@fastwa/common';
 
 @Injectable()
 export class ScheduleService implements OnBootstrap {
@@ -19,18 +15,14 @@ export class ScheduleService implements OnBootstrap {
   mountCronJobs() {
     const keys = Object.keys(this.createdJobs);
 
-    keys.forEach(key => {
-      const { 
-        time, 
-        callback, 
-        instance 
-      } = this.createdJobs[key];
+    keys.forEach((key) => {
+      const { time, callback, instance } = this.createdJobs[key];
 
       const cronJob = new CronJob(
-        time, 
+        time,
         callback.bind(instance),
         undefined,
-        false,
+        false
       );
 
       cronJob.start();
@@ -47,7 +39,7 @@ export class ScheduleService implements OnBootstrap {
       callback,
       time,
       instance
-    }
+    };
   }
 
   addJob(name: string, job: CronJob) {

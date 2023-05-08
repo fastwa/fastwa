@@ -2,7 +2,7 @@ import {
   Type,
   InstanceOptions,
   PARAMTYPES_METADATA,
-  LoggerService,
+  LoggerService
 } from '@fastwa/common';
 
 import { Module } from './module';
@@ -29,17 +29,14 @@ export class Injector {
       return this.instancesContainer.get(target.name);
     }
 
-    const services =
-      Reflect.getMetadata(PARAMTYPES_METADATA, target) || [];
+    const services = Reflect.getMetadata(PARAMTYPES_METADATA, target) || [];
 
-    const injections = services.map(i => this.resolveConstructor(i));
+    const injections = services.map((i) => this.resolveConstructor(i));
     const instance = new target(...injections);
-    
+
     this.instancesContainer.set(target.name, instance);
 
-    this.logger.log(
-      MODULE_INIT_MESSAGE(target.name)
-    );
+    this.logger.log(MODULE_INIT_MESSAGE(target.name));
 
     const valueToReplace = this.isContainerMetatype(target)
       ? this.container
@@ -68,7 +65,7 @@ export class Injector {
     const { metatype, instance } = target;
 
     if (!instance) {
-     (target.instance as object) = this.resolveConstructor(metatype);
+      (target.instance as object) = this.resolveConstructor(metatype);
     }
 
     return target.instance;

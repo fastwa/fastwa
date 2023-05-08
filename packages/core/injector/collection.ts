@@ -1,4 +1,4 @@
-import { ICommand } from "@fastwa/common";
+import { ICommand } from '@fastwa/common';
 
 export class CollectionContainer {
   private readonly _events = new Map<string, ICommand>();
@@ -17,35 +17,26 @@ export class CollectionContainer {
     return this._buttons;
   }
 
-  public addEvent(
-    name: string,
-    event: ICommand
-  ) {
+  public addEvent(name: string, event: ICommand) {
     this._events.set(name, event);
-    return event
+    return event;
   }
 
-  public addCommand(
-    name: string,
-    command: ICommand
-  ) {
+  public addCommand(name: string, command: ICommand) {
     if (this._commands.has(name)) {
       throw new Error(`Command ${name} already exists`);
     }
 
     this._commands.set(name, command);
-    return command
+    return command;
   }
 
-  public addButton(
-    name: string,
-    command: ICommand
-  ) {
+  public addButton(name: string, command: ICommand) {
     if (this._buttons.has(name)) {
       throw new Error(`Button ID ${name} already exists`);
     }
 
     this._buttons.set(name, command);
-    return command
+    return command;
   }
 }

@@ -1,5 +1,5 @@
 import { proto } from '@adiwajshing/baileys';
-import 'reflect-metadata'
+import 'reflect-metadata';
 
 import { MESSAGE_ARGS_METADATA } from '../../constants';
 import { WAParamTypes } from '../../enums/wa-param.enum';
@@ -11,45 +11,33 @@ function mergeMetadata(args, paramtype, index, data) {
       index,
       data
     }
-  }
+  };
 }
 
 function paramDecoratorFactory(paramtype: WAParamTypes) {
-  return (data?): ParameterDecorator =>
+  return (data?: string): ParameterDecorator =>
     (target, key, index) => {
-      const args = 
-        Reflect.getMetadata(MESSAGE_ARGS_METADATA, target.constructor, key) || {}
+      const args =
+        Reflect.getMetadata(MESSAGE_ARGS_METADATA, target.constructor, key) ||
+        {};
 
       Reflect.defineMetadata(
-        MESSAGE_ARGS_METADATA, 
-        mergeMetadata(
-          args,
-          paramtype,
-          index,
-          data
-        ), 
-        target.constructor, 
+        MESSAGE_ARGS_METADATA,
+        mergeMetadata(args, paramtype, index, data),
+        target.constructor,
         key
-      )
-  } 
+      );
+    };
 }
 
-export function Message(property?: keyof proto.IWebMessageInfo) {
-  return paramDecoratorFactory(WAParamTypes.MESSAGE)(property);
-}
+export const Message = (property?: keyof proto.IWebMessageInfo) =>
+  paramDecoratorFactory(WAParamTypes.MESSAGE)(property);
 
-export function Param(property?: string) {
-  return paramDecoratorFactory(WAParamTypes.PARAM)(property);
-}
+export const Param = (property?: string) =>
+  paramDecoratorFactory(WAParamTypes.PARAM)(property);
 
-export function Quoted() {
-  return paramDecoratorFactory(WAParamTypes.QUOTED)();
-}
+export const Quoted = () => paramDecoratorFactory(WAParamTypes.QUOTED)();
 
-export function RemoteJid() {
-  return paramDecoratorFactory(WAParamTypes.REMOTE_JID)();
-}
+export const RemoteJid = () => paramDecoratorFactory(WAParamTypes.REMOTE_JID)();
 
-export function Content() {
-  return paramDecoratorFactory(WAParamTypes.CONTENT)();
-}
+export const Content = () => paramDecoratorFactory(WAParamTypes.CONTENT)();
