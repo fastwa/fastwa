@@ -42,7 +42,7 @@ Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
 ## Stay in touch
 
 * Author - [Natan Rodrigues](https://github.com/Nata4n)
-* Website - [fastwa.org](https://fastwa.org)
+* Website - [https://fastwa.org](https://fastwa.org)
 * E-mail - [natanrce@proton.me](mailto:natanrce@proton.me)
 
 ## License
