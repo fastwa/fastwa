@@ -15,7 +15,9 @@
     "tslib": "2.4.1"
   },
   "peerDependencies": {
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "^0.1.12",
+    "class-transformer": "*",
+    "class-validator": "*"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d"
 }

@@ -1,32 +1,29 @@
 import { colors } from '@fastwa/common/utils';
+import { Injectable } from '../decorators';
 
-export class LoggerService {
-  context: string;
+@Injectable()
+export class Logger {
+  constructor(private readonly context: string) {}
 
-  constructor(context?: string) {
-    this.context = context;
-  }
-
-  log(message: string, streamType?: 'stdout' | 'stderr') {
+  public log(message: string) {
     const pid = this.getPid();
     const timestamp = this.getTimestamp();
 
     const messageToLog = colors.green(message);
-    const contextMessage = colors.yellow(`[${this.context}]`);
-    const formattedTimestamp = colors.green(timestamp);
+    const context = colors.yellow(`[${this.context}]`);
 
     const formattedMessage = this.formatMessage(
       pid,
-      formattedTimestamp,
-      contextMessage,
+      timestamp,
+      context,
       messageToLog
     );
 
-    process[streamType ?? 'stdout'].write(formattedMessage);
+    process.stdout.write(formattedMessage);
   }
 
   protected getPid() {
-    return colors.green(`[@fastwa] ${process.pid}  - `);
+    return colors.green(`[Fastwa] ${process.pid}  - `);
   }
 
   protected getTimestamp() {

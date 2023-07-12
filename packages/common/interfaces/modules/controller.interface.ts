@@ -1,3 +1,3 @@
-import { Type } from "@fastwa/common";
+import { Type } from '@fastwa/common';
 
 export type IController = Type<object>;

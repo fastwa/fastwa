@@ -1,4 +1,4 @@
-import { Type } from "./type.interface";
+import { Type } from './type.interface';
 
 export interface InstanceOptions {
   name: string;

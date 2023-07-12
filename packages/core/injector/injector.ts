@@ -2,76 +2,85 @@ import {
   Type,
   InstanceOptions,
   PARAMTYPES_METADATA,
-  LoggerService
+  Logger
 } from '@fastwa/common';
 
 import { Module } from './module';
-import { WAContainer } from './container';
+import { FastwaContainer } from './container';
 import { MODULE_INIT_MESSAGE } from '../helpers/messages.helper';
 
 export class Injector {
-  private logger = new LoggerService('Injector');
-  private instancesContainer = new Map<string, any>();
+  private logger = new Logger(Injector.name);
+  private instances = new Map<string, any>();
 
-  constructor(private readonly container: WAContainer) {}
+  constructor(private readonly container: FastwaContainer) {}
 
-  async createInstances(
+  public createInstances(
     modules: Map<string, Module> = this.container.getModules()
   ) {
-    for (const [_, module] of modules) {
-      await this.resolveProviders(module);
-      await this.resolveControllers(module);
-    }
+    modules.forEach((module) => {
+      this.loadProviders(module);
+      this.loadControllers(module);
+      this.loadInjectables(module);
+    });
   }
 
-  resolveConstructor<T>(target: Type<T>): T | WAContainer {
-    if (this.instancesContainer.has(target.name)) {
-      return this.instancesContainer.get(target.name);
+  public resolveConstructorParams<T>(target: Type<T>): Type<T> {
+    if (this.instances.has(target.name)) {
+      return this.instances.get(target.name);
     }
 
     const services = Reflect.getMetadata(PARAMTYPES_METADATA, target) || [];
 
-    const injections = services.map((i) => this.resolveConstructor(i));
+    const injections = services.map((i) => this.resolveConstructorParams(i));
     const instance = new target(...injections);
 
-    this.instancesContainer.set(target.name, instance);
+    this.instances.set(target.name, instance);
 
-    this.logger.log(MODULE_INIT_MESSAGE(target.name));
-
-    const valueToReplace = this.isContainerMetatype(target)
+    const resolvedInstance = this.isContainer(target)
       ? this.container
       : instance;
 
-    return valueToReplace;
+    return resolvedInstance as Type<T>;
   }
 
-  async resolveControllers(module: Module) {
+  public loadControllers(module: Module) {
     const controllers = module.controllers;
 
-    for (const [_, module] of controllers) {
-      await this.instanceMetatype(module);
-    }
+    controllers.forEach((controller) => {
+      this.loadInstance(controller);
+      this.logger.log(MODULE_INIT_MESSAGE(controller.name));
+    });
   }
 
-  async resolveProviders(module: Module) {
+  public loadProviders(module: Module) {
     const providers = module.providers;
 
-    for (const [_, module] of providers) {
-      await this.instanceMetatype(module);
-    }
+    providers.forEach((provider) => {
+      this.loadInstance(provider);
+      this.logger.log(MODULE_INIT_MESSAGE(provider.name));
+    });
   }
 
-  async instanceMetatype(target: InstanceOptions) {
+  public loadInjectables(module: Module) {
+    const injectables = module.injectables;
+
+    injectables.forEach((injectable) => {
+      this.loadInstance(injectable);
+    });
+  }
+
+  public loadInstance(target: InstanceOptions) {
     const { metatype, instance } = target;
 
     if (!instance) {
-      (target.instance as object) = this.resolveConstructor(metatype);
+      target.instance = this.resolveConstructorParams(metatype);
     }
 
     return target.instance;
   }
 
-  isContainerMetatype(metatype: Type<any>) {
-    return metatype.prototype === WAContainer.prototype;
+  private isContainer(metatype: Type<any>) {
+    return metatype.prototype === FastwaContainer.prototype;
   }
 }

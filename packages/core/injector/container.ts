@@ -1,21 +1,28 @@
-import { Type, ICommand, IController, IProvider } from '@fastwa/common';
+import { Type, Interaction, IController, IProvider } from '@fastwa/common';
 
 import { Module } from './module';
-import { AbstractWAClient } from '../adapters';
+import { AbstractBaileysAdapter } from '../adapters';
 import { ModulesContainer } from './modules-container';
 import { CollectionContainer } from './collection';
+import { ApplicationConfig } from '../application-config';
 
-export class WAContainer {
-  private baileysSocket: AbstractWAClient;
+export class FastwaContainer {
+  private baileysSocket: AbstractBaileysAdapter;
 
   private modules = new ModulesContainer();
   private collection = new CollectionContainer();
 
-  public setSocket(socket: any) {
+  constructor(private readonly _applicationConfig: ApplicationConfig) {}
+
+  get applicationConfig(): ApplicationConfig {
+    return this._applicationConfig;
+  }
+
+  public setClient(socket: any) {
     this.baileysSocket = socket;
   }
 
-  public getSocket() {
+  public getClient() {
     return this.baileysSocket;
   }
 
@@ -27,27 +34,27 @@ export class WAContainer {
     return this.collection.events;
   }
 
+  public getReactions() {
+    return this.collection.reactions;
+  }
+
   public getCommands() {
     return this.collection.commands;
   }
 
-  public getButtons() {
-    return this.collection.buttons;
-  }
-
-  public addEvent(name: string, event: ICommand) {
+  public addEvent(name: string, event: Interaction) {
     this.collection.addEvent(name, event);
     return event;
   }
 
-  public addCommand(name: string, command: ICommand) {
-    this.collection.addCommand(name, command);
-    return command;
+  public addReaction(name: string, reaction: Interaction) {
+    this.collection.addReaction(name, reaction);
+    return reaction;
   }
 
-  public addButton(name: string, button: ICommand) {
-    this.collection.addButton(name, button);
-    return button;
+  public addCommand(name: string, command: Interaction) {
+    this.collection.addCommand(name, command);
+    return command;
   }
 
   public addModule(target: Type<any>) {
@@ -69,6 +76,11 @@ export class WAContainer {
   public addController(controller: IController, moduleName: string) {
     const moduleRef = this.modules.get(moduleName);
     moduleRef.addController(controller);
+  }
+
+  public addInjectable(injectable: IProvider, moduleName: string) {
+    const moduleRef = this.modules.get(moduleName);
+    moduleRef.addInjectable(injectable);
   }
 
   public clear() {

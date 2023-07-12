@@ -1,4 +1,9 @@
-import { MessageUpsertType, WAMessage, WASocket } from '@adiwajshing/baileys';
+import {
+  MessageUpsertType,
+  WAMessage,
+  WASocket
+} from '@whiskeysockets/baileys';
+
 import { WAEvent } from '../enums';
 
 interface IMessagesUpsertEvent {
@@ -6,7 +11,7 @@ interface IMessagesUpsertEvent {
   type: MessageUpsertType;
 }
 
-type FilterCallback = (message: WAMessage) => boolean;
+type FilterCallback = (msg: WAMessage) => boolean;
 
 export function createMessageCollector(
   socket: WASocket,
@@ -15,20 +20,20 @@ export function createMessageCollector(
   filter: FilterCallback
 ): Promise<WAMessage> {
   return new Promise((resolve) => {
-    const onMessage = ({ messages }: IMessagesUpsertEvent) => {
+    const onMessagesUpsert = ({ messages }: IMessagesUpsertEvent) => {
       const msg = messages[0];
-      const isFromRemoteJid = msg.key.remoteJid === remoteJid;
+      const jidIsAuthor = msg.key.remoteJid === remoteJid;
 
-      if (isFromRemoteJid && filter(msg)) {
-        socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessage);
+      if (jidIsAuthor && filter(msg)) {
+        socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessagesUpsert);
         resolve(msg);
       }
     };
 
-    socket.ev.on(WAEvent.MESSAGES_UPSERT, onMessage);
+    socket.ev.on(WAEvent.MESSAGES_UPSERT, onMessagesUpsert);
 
     setTimeout(() => {
-      socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessage);
+      socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessagesUpsert);
     }, timeout);
   });
 }

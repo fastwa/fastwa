@@ -1,4 +1,4 @@
-import { MetadataScanner, WAContainer } from '@fastwa/core';
+import { MetadataScanner, FastwaContainer } from '@fastwa/core';
 import { Injectable, OnModuleInit, Type } from '@fastwa/common';
 
 import { flatten } from './utils';
@@ -8,7 +8,7 @@ import { ScheduleService } from './schedule.service';
 @Injectable()
 export class ScheduleExplorer implements OnModuleInit {
   constructor(
-    private readonly container: WAContainer,
+    private readonly container: FastwaContainer,
     private readonly metadataScanner: MetadataScanner,
     private readonly scheduleService: ScheduleService
   ) {}

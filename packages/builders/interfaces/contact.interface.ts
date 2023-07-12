@@ -1,6 +1,6 @@
 export interface IContactOptions {
-  fullName?: string;
+  id?: string;
   org?: string;
-  whatsappId?: string;
+  fullName?: string;
   phoneNumber?: string;
 }

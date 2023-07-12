@@ -1,4 +1,4 @@
 export * from './sticker';
-export * from './component';
+export * from './contact.builder';
 
-export * from './message';
+export * from './component';

@@ -1,5 +1,5 @@
-import { v4 } from 'uuid';
 import { CronJob } from 'cron';
+import { v4 as uuid } from 'uuid';
 
 import { Injectable, OnBootstrap, Type } from '@fastwa/common';
 
@@ -33,7 +33,7 @@ export class ScheduleService implements OnBootstrap {
   }
 
   createJob(callback: Function, time: string, instance: Type<any>) {
-    const id = v4();
+    const id = uuid();
 
     this.createdJobs[id] = {
       callback,

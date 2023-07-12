@@ -2,7 +2,7 @@ import {
   isConstructor,
   isFunction,
   Type,
-  WA_SOCKET_METADATA
+  SOCKET_METADATA
 } from '@fastwa/common';
 
 export class MetadataScanner {
@@ -18,8 +18,7 @@ export class MetadataScanner {
   public *scanServerHooks(instance: Type<object>) {
     for (const property in instance) {
       const key = String(property);
-
-      const isSocket = Reflect.getMetadata(WA_SOCKET_METADATA, instance, key);
+      const isSocket = Reflect.getMetadata(SOCKET_METADATA, instance, key);
 
       if (isSocket) yield key;
     }

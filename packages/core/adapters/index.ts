@@ -1,1 +1,1 @@
-export * from './wa-client';
+export * from './baileys-adapter';

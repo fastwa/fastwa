@@ -11,7 +11,7 @@
   "scripts": {
     "format": "prettier '**/*.ts' --ignore-path .prettierignore --write",
     "prebuild": "tsc -b --clean packages",
-    "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --cls --rs sample/01-stickers/main.ts",
+    "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --cls --rs sample/01-stickers/src/main.ts",
     "build": "tsc -b -v packages",
     "publish": "npm run prebuild && npm run build && lerna publish --force-publish --exact -m \"chore(@fastwa) publish %s release\"",
     "changelog": "lerna-changelog"

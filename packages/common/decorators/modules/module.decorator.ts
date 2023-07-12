@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import { IModuleMetaData } from '@fastwa/common';
 
-export function Module(moduleMetaData: IModuleMetaData) {
+import { ModuleMetadata } from '@fastwa/common';
+
+export function Module(options: ModuleMetadata) {
   return (target: Function) => {
-    for (const property in moduleMetaData) {
-      Reflect.defineMetadata(property, moduleMetaData[property], target);
+    for (const property in options) {
+      Reflect.defineMetadata(property, options[property], target);
     }
   };
 }

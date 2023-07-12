@@ -1,3 +1,3 @@
-export * from './module.interface';
+export * from './module-metadata.interface';
 export * from './controller.interface';
 export * from './provider.interface';
