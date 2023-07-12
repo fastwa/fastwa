@@ -1,6 +1,6 @@
 {
   "name": "@fastwa/client",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Lightweight and powerfull framework (@client)",
   "author": "Natan Rodrigues",
   "license": "GPL3",
@@ -12,15 +12,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.3.1",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.0",
+    "@whiskeysockets/baileys": "^6.3.1",
     "qrcode-terminal": "^0.12.0",
     "tslib": "2.4.1"
   },
   "peerDependencies": {
-    "@fastwa/common": "^0.0.1",
-    "@fastwa/core": "^0.0.1"
+    "@fastwa/common": "^1.0.0",
+    "@fastwa/core": "^1.0.0"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d"
 }
