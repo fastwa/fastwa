@@ -1,6 +1,6 @@
 {
   "name": "@fastwa/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight and powerfull framework (@core)",
   "author": "Natan Rodrigues",
   "license": "GPL3",
@@ -16,7 +16,7 @@
     "tslib": "2.4.1"
   },
   "devDependencies": {
-    "@fastwa/common": "1.0.0"
+    "@fastwa/common": "1.0.1"
   },
   "peerDependencies": {
     "@fastwa/client": "^1.0.0",
