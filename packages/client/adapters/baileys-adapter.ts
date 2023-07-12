@@ -93,7 +93,7 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
             statusCode === DisconnectReason.restartRequired;
 
           if (restartRequired) {
-            this.listen();
+            this.initSocket();
           }
         }
       }
