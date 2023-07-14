@@ -17,7 +17,7 @@
     "changelog": "lerna-changelog"
   },
   "dependencies": {
-    "@hapi/boom": "^9.1.4",
+    "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.3.1",
     "pino": "^8.7.0",
     "qrcode-terminal": "^0.12.0",
