@@ -189,6 +189,6 @@ export class InteractionProxy {
       return canActivate;
     };
 
-    return guards.length ? fnCanActivate : null;
+    return fnCanActivate;
   }
 }

@@ -39,6 +39,20 @@ function paramDecoratorFactory(paramType: ParamType) {
 export const Message = (property?: keyof WAMessage) =>
   paramDecoratorFactory(ParamType.MESSAGE)(property);
 
+/**
+ * Interaction handler parameter decorator. Extracts the entire `args` object
+ * property, or optionally a named property of the `args` object, from
+ * the `message` object and populates the decorated parameter with that value.
+ *
+ * For example:
+ * ```typescript
+ * async create(@Args('name')) name: string)
+ * ```
+ *
+ * @param property name of single property to extract from the `body` object
+ *
+ * @publicApi
+ */
 export const Args = (property?: string) =>
   paramDecoratorFactory(ParamType.ARGS)(property);
 

@@ -3,7 +3,8 @@ import {
   Interaction,
   mergeKeysAndValues,
   ParamType,
-  isEmpty
+  isEmpty,
+  isRegex
 } from '@fastwa/common';
 import { createCommandRegex, MESSAGE_REGEX } from '../helpers';
 
@@ -80,14 +81,17 @@ export class InteractionFactory {
     return interactionName.match(MESSAGE_REGEX.PARAM_KEYS) || [''];
   }
 
-  public getRegex(interactionName: string) {
-    const commandParams = interactionName.replace(
+  public getRegex(interactionName: string | RegExp) {
+    if (isRegex(interactionName)) {
+      return interactionName as RegExp;
+    }
+
+    const commandParams = (interactionName as string).replace(
       MESSAGE_REGEX.PARAMETER,
       '(.*?)'
     );
-    const commandRegex = createCommandRegex(commandParams);
 
-    return commandRegex;
+    return createCommandRegex(commandParams);
   }
 
   public getParamType(key: string) {

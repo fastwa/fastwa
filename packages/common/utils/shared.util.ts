@@ -6,3 +6,5 @@ export const isConstructor = (value: any) => value === 'constructor';
 
 export const isEmpty = (array: Array<unknown>): boolean =>
   !(array && array.length > 0);
+
+export const isRegex = (value: any) => value instanceof RegExp;

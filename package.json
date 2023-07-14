@@ -19,7 +19,6 @@
   "dependencies": {
     "@hapi/boom": "^9.1.4",
     "@whiskeysockets/baileys": "^6.3.1",
-    "axios": "^0.27.2",
     "pino": "^8.7.0",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
@@ -39,7 +38,6 @@
     "lerna": "^6.6.2",
     "lerna-changelog": "^2.2.0",
     "prettier": "^2.8.8",
-    "sqlite3": "^5.1.6",
     "tsconfig-paths": "^4.0.0",
     "typescript": "^4.8.4"
   },

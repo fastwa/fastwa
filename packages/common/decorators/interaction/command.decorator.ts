@@ -6,7 +6,7 @@ import { INTERACTION_METADATA, TYPE_METADATA } from '../../constants';
 import { BaileysEventMap } from '@whiskeysockets/baileys';
 
 export interface InteractionMetadata {
-  name?: string;
+  name?: string | RegExp;
   type?: InteractionType;
 }
 
@@ -36,18 +36,25 @@ export const interactionDecoratorFactory =
     });
   };
 
+export const commandDecoratorFactory = () => (name: string | RegExp) => {
+  return interactionMapping({
+    name,
+    type: InteractionType.COMMAND
+  });
+};
+
 export const eventDecoratorFactory =
-  (type: InteractionType) => (property: keyof BaileysEventMap | WAEvent) => {
+  () => (property: keyof BaileysEventMap | WAEvent) => {
     return interactionMapping({
       name: property,
-      type
+      type: InteractionType.ON
     });
   };
 
-export const Command = interactionDecoratorFactory(InteractionType.COMMAND);
+export const Command = commandDecoratorFactory();
 
 export const Reaction = interactionDecoratorFactory(InteractionType.REACTION);
 
 export const Poll = interactionDecoratorFactory(InteractionType.POLL);
 
-export const On = eventDecoratorFactory(InteractionType.ON);
+export const On = eventDecoratorFactory();

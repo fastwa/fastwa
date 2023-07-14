@@ -26,6 +26,7 @@ import { Boom } from '@hapi/boom';
 
 import { PipesConsumer } from '@fastwa/core/pipes';
 import { GuardsConsumer, GuardsContext } from '@fastwa/core/guards';
+import { ValidationException } from '@fastwa/common/exceptions';
 
 export class BaileysAdapter extends AbstractBaileysAdapter {
   socket: WASocket;
@@ -56,7 +57,7 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
     );
   }
 
-  public initSocket() {
+  public initSocket(restartRequired?: boolean) {
     const { saveCreds, ...options } = this.options;
 
     this.socket = makeWASocket({
@@ -64,8 +65,11 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
       logger: pino({ level: LogLevels.SILENT })
     });
 
-    this.responseController.setSocket(this.socket);
+    if (restartRequired) {
+      this.listen();
+    }
 
+    this.responseController.setSocket(this.socket);
     saveCreds && this.useSaveCreds(saveCreds);
   }
 
@@ -93,7 +97,7 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
             statusCode === DisconnectReason.restartRequired;
 
           if (restartRequired) {
-            this.initSocket();
+            this.initSocket(restartRequired);
           }
         }
       }
@@ -116,10 +120,19 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
 
       if (interaction) {
         const fnProxy = this.interactionProxy.createProxy(interaction);
-        const result = await fnProxy(msg);
 
-        result &&
-          (await this.responseController.reply(msg.key.remoteJid, result));
+        const isValidationException = (value: any) =>
+          value instanceof ValidationException;
+
+        const proxyResult = await fnProxy(msg)
+          .then((response) => response)
+          .catch((error) => error);
+
+        const result = isValidationException(proxyResult)
+          ? proxyResult.errors.join(', ')
+          : proxyResult;
+
+        await this.responseController.reply(msg.key.remoteJid, result);
       }
     });
   }

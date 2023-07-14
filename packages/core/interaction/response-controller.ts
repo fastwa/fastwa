@@ -8,9 +8,9 @@ export class MessageResponseController {
     this.socket = socket;
   }
 
-  async reply(remoteJid: string, result: AnyMessageContent | string) {
+  async reply(from: string, result: AnyMessageContent | string) {
     const response = this.transformToResult(result);
-    return await this.socket.sendMessage(remoteJid, response);
+    return await this.socket.sendMessage(from, response);
   }
 
   private transformToResult(response: any): AnyMessageContent {
