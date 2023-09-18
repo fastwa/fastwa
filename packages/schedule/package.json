@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/cron": "^2.0.0",
-    "@types/uuid": "^8.3.4"
+    "@types/uuid": "^9.0.4"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d"
 }
