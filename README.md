@@ -6,7 +6,7 @@
 
 <p align="center">
   <p align="center">
-   Lightweight and full-featured framework for building <a href="http://web.whatsapp.com/" target="blank">Whatsapp</a> applications.
+   Next-generation framework for building efficient, reliable and scalable chatbots.
     <br/>
     <br/>
   </p>
@@ -49,4 +49,4 @@ Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
 
 ## License
 
-Distributed under the GPL 3.0 License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
