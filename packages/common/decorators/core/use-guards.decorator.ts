@@ -12,7 +12,7 @@ import { extendArrayMetadata } from '../../utils';
  * @param guards a single guard instance or class, or a list of guard instances
  * or classes.
  *
- * @see [Guards](https://docs.fastwa.com/guards)
+ * @see [Guards](https://fastwa.com/docs/guards)
  *
  * @publicApi
  */

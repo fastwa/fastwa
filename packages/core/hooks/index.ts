@@ -1,2 +1,2 @@
-export * from './bootstrap.hook';
-export * from './module.hook';
+export * from './on-bootstrap.hook';
+export * from './on-module-init.hook';

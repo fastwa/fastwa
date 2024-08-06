@@ -12,12 +12,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "useUnknownInCatchVariables": false,
-    "target": "es2017",
+    "target": "es2018",
     "sourceMap": false,
     "allowJs": false,
     "strict": true,
     "strictNullChecks": false,
-    "allowSyntheticDefaultImports": true, 
-    "types": ["node"],
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
   }
 }

@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "author": "Natan Rodrigues",
-  "license": "GPL3",
+  "license": "MIT",
   "dependencies": {
     "cron": "^2.1.0",
     "tslib": "2.4.1",

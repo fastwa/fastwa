@@ -1,16 +1,30 @@
-import { Type, Interaction, IController, IProvider } from '@fastwa/common';
+import {
+  Type,
+  Interaction,
+  IController,
+  IProvider,
+  DynamicModule
+} from '@fastwa/common';
 
 import { Module } from './module';
-import { AbstractBaileysAdapter } from '../adapters';
+import { AbstractSocketAdapter } from '../adapters';
 import { ModulesContainer } from './modules-container';
 import { CollectionContainer } from './collection';
 import { ApplicationConfig } from '../application-config';
+import { ModuleCompiler } from './compiler';
+
+type ModuleMetatype = Type<any> | DynamicModule;
 
 export class FastwaContainer {
-  private baileysSocket: AbstractBaileysAdapter;
-
-  private modules = new ModulesContainer();
-  private collection = new CollectionContainer();
+  public lastTimestampAt = Date.now();
+  private socketAdapter: AbstractSocketAdapter;
+  private readonly modules = new ModulesContainer();
+  private readonly collection = new CollectionContainer();
+  private readonly moduleCompiler = new ModuleCompiler();
+  private readonly dynamicModulesMetadata = new Map<
+    string,
+    Partial<DynamicModule>
+  >();
 
   constructor(private readonly _applicationConfig: ApplicationConfig) {}
 
@@ -18,12 +32,12 @@ export class FastwaContainer {
     return this._applicationConfig;
   }
 
-  public setClient(socket: any) {
-    this.baileysSocket = socket;
+  public setSocketAdapter(socket: any) {
+    this.socketAdapter = socket;
   }
 
-  public getClient() {
-    return this.baileysSocket;
+  public getSocketRef() {
+    return this.socketAdapter;
   }
 
   public getModules() {
@@ -57,30 +71,71 @@ export class FastwaContainer {
     return command;
   }
 
-  public addModule(target: Type<any>) {
-    const moduleRef = new Module(target);
-    this.modules.set(target.name, moduleRef);
+  public async addModule(metatype) {
+    const { type, dynamicMetadata, token } = await this.moduleCompiler.compile(
+      metatype
+    );
+
+    await this.addDynamicMetadata(token, dynamicMetadata);
+
+    if (this.modules.has(token)) {
+      return this.modules.get(token);
+    }
+
+    const moduleRef = new Module(type);
+    this.modules.set(token, moduleRef);
+
     return moduleRef;
   }
 
-  public addImport(module: Module, moduleName: string) {
-    const moduleRef = this.modules.get(moduleName);
+  public async addDynamicMetadata(
+    token: string,
+    dynamicModuleMetadata: Partial<DynamicModule>
+  ) {
+    if (!dynamicModuleMetadata) {
+      return;
+    }
+
+    this.dynamicModulesMetadata.set(token, dynamicModuleMetadata);
+
+    const { imports } = dynamicModuleMetadata;
+    await this.addDynamicModules(imports);
+  }
+
+  public async addDynamicModules(modules: ModuleMetatype[]) {
+    if (!modules) {
+      return;
+    }
+
+    await Promise.all(modules.map((module) => this.addModule(module)));
+  }
+
+  public addImport(module: Module, token: string) {
+    const moduleRef = this.modules.get(token);
     moduleRef.addImport(module);
   }
 
-  public addProvider(provider: IProvider, moduleName: string) {
-    const moduleRef = this.modules.get(moduleName);
+  public addProvider(provider: IProvider, token: string) {
+    const moduleRef = this.modules.get(token);
     moduleRef.addProvider(provider);
   }
 
-  public addController(controller: IController, moduleName: string) {
-    const moduleRef = this.modules.get(moduleName);
+  public addController(controller: IController, token: string) {
+    const moduleRef = this.modules.get(token);
     moduleRef.addController(controller);
   }
 
-  public addInjectable(injectable: IProvider, moduleName: string) {
-    const moduleRef = this.modules.get(moduleName);
+  public addInjectable(injectable: IProvider, token: string) {
+    const moduleRef = this.modules.get(token);
     moduleRef.addInjectable(injectable);
+  }
+
+  public getDynamicMetadata<K extends Exclude<keyof DynamicModule, 'module'>>(
+    token: string,
+    metadataKey: K
+  ): DynamicModule[K] {
+    const metadata = this.dynamicModulesMetadata.get(token);
+    return metadata?.[metadataKey] ?? [];
   }
 
   public clear() {

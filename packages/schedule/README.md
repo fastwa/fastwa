@@ -1,12 +1,12 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank">
+  <a href="https://github.com/fastwa/fastwa" target="blank">
     <img src="https://avatars.githubusercontent.com/u/118643349" width="120" alt="Logo" />
   </a>
 </p>
 
 <p align="center">
   <p align="center">
-   Lightweight and powerfull framework to jumpstart your <a href="http://web.whatsapp.com/" target="blank">Whatsapp</a> applications (node.js)
+   Next-generation framework for building efficient, reliable and scalable chatbots.
     <br/>
     <br/>
   </p>
@@ -14,37 +14,29 @@
 
 <p align="center">
   <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/stars/playwa/playwa" alt="Stargazers" />
+    <img src="https://img.shields.io/github/stars/fastwa/fastwa" alt="Stargazers" />
   </a>
   <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/issues/playwa/playwa" alt="Issues" />
+    <img src="https://img.shields.io/github/issues/fastwa/fastwa" alt="Issues" />
   </a>
 </p>
 
 ## Description
 
-Playwa is a open source project and a excellent way, if you want an easy start on getting commands and interactions. Perfect for building efficient and scalable [Whatsapp](https://web.whatsapp.com) applications.
+Fastwa is an open source project and an excellent way if you want an easy start. Perfect for building efficient and scalable [Whatsapp](https://web.whatsapp.com) applications.
 
-Built with [TypeScript](http://www.typescriptlang.org/) and based on [@nestjs](https://github.com/nestjs/nest) framework. Playwa makes use of **websocket** under the hood, saving like half a gig of ram. Also, provides compatibility with a wide range of other libraries and many built-in features, allowing for easy use of third-party plugins which are avaliable.
+## Getting started
+* To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). :books:
+* [가이드](https://docs.fastwa.org) 문서는 [docs.fastwa.org](https://docs.fastwa.org)에서 확인하실 수 있습니다. :books:
+* [ガイド](https://docs.fastwa.org)は [docs.fastwa.org](https://docs.fastwa.org)でご確認ください。 :books:
 
-## Example
-Please check [@playwa/example](https://github.com/playwa/example) to see an example usage.
 
 ## Contributing
+### Contributing Guidelines
+Read through our [contributing guidelines](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md) to learn about our submission process, coding rules, and more.
 
-Want to contribute? Great!
-
-To fix a bug or enhance an existing module, follow these steps:
-
-* Fork the repo
-* Create a new branch (`git checkout -b improve-feature`)
-* Make the appropriate changes in the files
-* Add changes to reflect the changes made
-* Commit your changes (`git commit -am 'Improve feature'`)
-* Push to the branch (`git push origin improve-feature`)
-* Create a Pull Request
-
-Help us keep **Playwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
+### Code of Conduct
+Help us keep **fastwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
 
 ## Acknowledgments
 Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
@@ -52,8 +44,9 @@ Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
 ## Stay in touch
 
 * Author - [Natan Rodrigues](https://github.com/Nata4n)
-* E-mail - [eusounatan@proton.me](mailto:eusounatan@proton.me)
+* Website - [https://fastwa.org](https://fastwa.org)
+* E-mail - [natanrce@proton.me](mailto:natanrce@proton.me)
 
 ## License
 
-Distributed under the GNU 3.0 License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.

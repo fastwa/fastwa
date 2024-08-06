@@ -4,7 +4,7 @@ import {
   InteractionExplorer,
   callModuleBootstrapHook,
   callModuleInitHook,
-  AbstractBaileysAdapter
+  AbstractSocketAdapter
 } from '@fastwa/core';
 
 import { Logger } from '@fastwa/common';
@@ -12,32 +12,32 @@ import { ApplicationConfig } from './application-config';
 
 export class FastwaApplication {
   private config: ApplicationConfig;
-  private clientRef: AbstractBaileysAdapter;
+  private socketRef: AbstractSocketAdapter;
   private InteractionExplorer: InteractionExplorer;
 
   private readonly logger = new Logger(FastwaApplication.name);
 
   constructor(private readonly container: FastwaContainer) {
     this.config = this.container.applicationConfig;
-    this.clientRef = this.container.getClient();
+    this.socketRef = this.container.getSocketRef();
 
     this.InteractionExplorer = new InteractionExplorer(this.container);
   }
 
   public async listen() {
     this.InteractionExplorer.explore();
-    this.clientRef.listen();
+    this.socketRef.listen();
 
     await this.callInitHook();
     await this.callBootstrapHook();
 
-    this.logger.log(MESSAGES.APPLICATION_READY);
+    this.logger.info(MESSAGES.APPLICATION_READY);
 
     return this;
   }
 
   public async useSaveCreds(saveCreds: () => Promise<any>) {
-    this.clientRef.useSaveCreds(saveCreds);
+    this.socketRef.useSaveCreds(saveCreds);
     return this;
   }
 

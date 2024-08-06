@@ -9,7 +9,6 @@ export class PipesConsumer {
     return transforms.reduce(async (prev, pipe) => {
       const val = await prev;
       const result = pipe.transform(val, { metatype, data });
-
       return result;
     }, Promise.resolve(value));
   }

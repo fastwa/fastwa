@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "Lightweight and powerfull framework (@common)",
   "author": "Natan Rodrigues",
-  "license": "GPL3",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/fastwa/fastwa"

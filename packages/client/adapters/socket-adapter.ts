@@ -3,7 +3,8 @@ import pino from 'pino';
 import makeWASocket, {
   DisconnectReason,
   BaileysEvent,
-  WASocket
+  WASocket,
+  WAMessage
 } from '@whiskeysockets/baileys';
 
 import {
@@ -11,7 +12,8 @@ import {
   SocketOptions,
   LogLevels,
   Interaction,
-  SocketConnectionState
+  SocketConnectionState,
+  ReactionMessage
 } from '@fastwa/common';
 
 import {
@@ -19,7 +21,7 @@ import {
   FastwaContainer,
   InteractionProxy,
   MessageResponseController,
-  AbstractBaileysAdapter
+  AbstractSocketAdapter
 } from '@fastwa/core';
 
 import { Boom } from '@hapi/boom';
@@ -28,7 +30,7 @@ import { PipesConsumer } from '@fastwa/core/pipes';
 import { GuardsConsumer, GuardsContext } from '@fastwa/core/guards';
 import { ValidationException } from '@fastwa/common/exceptions';
 
-export class BaileysAdapter extends AbstractBaileysAdapter {
+export class SocketAdapter extends AbstractSocketAdapter {
   socket: WASocket;
 
   interactionProxy: InteractionProxy;
@@ -57,7 +59,7 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
     );
   }
 
-  public initSocket(restartRequired?: boolean) {
+  public initializeSocket(restartRequired?: boolean) {
     const { saveCreds, ...options } = this.options;
 
     this.socket = makeWASocket({
@@ -74,18 +76,18 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
   }
 
   public listen() {
-    const commands = this.container.getCommands();
-    const reactions = this.container.getReactions();
-    const events = this.container.getEvents();
-
-    this.connectToSocket();
-
-    this.loadCommands(commands);
-    this.loadReactions(reactions);
-    this.loadEvents(events);
+    this.setupSocketListeners();
   }
 
-  public connectToSocket() {
+  private setupSocketListeners() {
+    this.connectToSocket();
+
+    this.setupEventListeners();
+    this.setupMessageListeners();
+    this.setupReactionListeners();
+  }
+
+  private connectToSocket() {
     this.socket.ev.on(
       WAEvent.CONNECTION_UPDATE,
       ({ connection, lastDisconnect }) => {
@@ -96,9 +98,7 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
             statusCode === DisconnectReason.loggedOut ||
             statusCode === DisconnectReason.restartRequired;
 
-          if (restartRequired) {
-            this.initSocket(restartRequired);
-          }
+          restartRequired && this.initializeSocket(restartRequired);
         }
       }
     );
@@ -108,53 +108,53 @@ export class BaileysAdapter extends AbstractBaileysAdapter {
     this.socket.ev.on(WAEvent.CREDS_UPDATE, saveCreds);
   }
 
-  public loadCommands(commands: Map<string, Interaction>) {
-    this.socket.ev.on(WAEvent.MESSAGES_UPSERT, async ({ messages }) => {
-      const msg = messages[0];
-      const messageContent = this.interactionFactory.getMessageContent(msg);
-
-      const interaction = this.interactionFactory.getInteraction(
-        messageContent,
-        commands
-      );
-
-      if (interaction) {
-        const fnProxy = this.interactionProxy.createProxy(interaction);
-
-        const isValidationException = (value: any) =>
-          value instanceof ValidationException;
-
-        const proxyResult = await fnProxy(msg)
-          .then((response) => response)
-          .catch((error) => error);
-
-        const result = isValidationException(proxyResult)
-          ? proxyResult.errors.join(', ')
-          : proxyResult;
-
-        await this.responseController.reply(msg.key.remoteJid, result);
-      }
-    });
+  private setupMessageListeners() {
+    this.socket.ev.on(WAEvent.MESSAGES_UPSERT, this.handleMessages.bind(this));
   }
 
-  public loadEvents(events: Map<string, Interaction>) {
+  private setupEventListeners() {
+    const events = this.container.getEvents();
+
     events.forEach(({ command, instance, callback }) => {
       this.socket.ev.on(command as BaileysEvent, callback.bind(instance));
     });
   }
 
-  public loadReactions(reactions: Map<string, Interaction>) {
-    this.socket.ev.on(WAEvent.MESSAGES_REACTION, async (message) => {
-      const msg = message[0];
-      const interaction = reactions.get(msg.reaction.text);
+  private setupReactionListeners() {
+    this.socket.ev.on(
+      WAEvent.MESSAGES_REACTION,
+      this.handleReactions.bind(this)
+    );
+  }
 
-      if (interaction) {
-        const fnProxy = this.interactionProxy.createProxy(interaction);
-        const response = await fnProxy(msg);
+  private async handleReactions(message: ReactionMessage[]) {
+    const msg = message[0];
+    const interaction = this.container.getReactions().get(msg.reaction.text);
 
-        response &&
-          (await this.responseController.reply(msg.key.remoteJid, response));
-      }
-    });
+    if (interaction) {
+      await this.handleInteraction(msg, interaction);
+    }
+  }
+
+  private async handleMessages({ messages }) {
+    const msg = messages[0];
+    const messageContent = this.interactionFactory.getMessageContent(msg);
+
+    const interaction = this.interactionFactory.getInteraction(
+      messageContent,
+      this.container.getCommands()
+    );
+
+    if (interaction) {
+      await this.handleInteraction(msg, interaction);
+    }
+  }
+
+  private async handleInteraction(msg: WAMessage, interaction: Interaction) {
+    const fnProxy = this.interactionProxy.createProxy(interaction);
+    const response = await fnProxy(msg);
+
+    response &&
+      (await this.responseController.reply(msg.key.remoteJid, response));
   }
 }

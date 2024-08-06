@@ -2,8 +2,8 @@
   "name": "@fastwa/core",
   "author": "Natan Rodrigues",
   "description": "Lightweight and powerfull framework",
-  "license": "GPL3",
-  "version": "1.0.0",
+  "license": "MIT",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/fastwa/fastwa"
@@ -11,14 +11,14 @@
   "scripts": {
     "format": "prettier '**/*.ts' --ignore-path .prettierignore --write",
     "prebuild": "tsc -b --clean packages",
-    "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --cls --rs sample/01-stickers/src/main.ts",
+    "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --rs sample/01-stickers/src/main.ts",
     "build": "tsc -b -v packages",
     "publish": "npm run prebuild && npm run build && lerna publish --force-publish --exact -m \"chore(@fastwa) publish %s release\"",
     "changelog": "lerna-changelog"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",
-    "@whiskeysockets/baileys": "^6.3.1",
+    "@whiskeysockets/baileys": "^6.7.5",
     "pino": "^8.7.0",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
@@ -28,6 +28,7 @@
     "uuid": "9.0.0"
   },
   "devDependencies": {
+    "@types/ws": "^8.5.9",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.28.0",
@@ -39,7 +40,7 @@
     "lerna-changelog": "^2.2.0",
     "prettier": "^2.8.8",
     "tsconfig-paths": "^4.0.0",
-    "typescript": "^4.8.4"
+    "typescript": "^5.5.4"
   },
   "changelog": {
     "labels": {

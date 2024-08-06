@@ -1,11 +1,14 @@
 import { WAMessage } from '@whiskeysockets/baileys';
+
 import {
   Interaction,
   mergeKeysAndValues,
   ParamType,
   isEmpty,
-  isRegex
+  isRegex,
+  isString
 } from '@fastwa/common';
+
 import { createCommandRegex, MESSAGE_REGEX } from '../helpers';
 
 export class InteractionFactory {
@@ -78,7 +81,9 @@ export class InteractionFactory {
   }
 
   public getKeys(interactionName: string) {
-    return interactionName.match(MESSAGE_REGEX.PARAM_KEYS) || [''];
+    return isString(interactionName)
+      ? interactionName.match(MESSAGE_REGEX.PARAM_KEYS)
+      : [];
   }
 
   public getRegex(interactionName: string | RegExp) {
@@ -95,8 +100,8 @@ export class InteractionFactory {
   }
 
   public getParamType(key: string) {
-    const keyType = key.split(':');
-    return Number(keyType[0]);
+    const type = key.split(':');
+    return Number(type[0]);
   }
 
   public getInteraction(

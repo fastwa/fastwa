@@ -1,6 +1,12 @@
 import 'reflect-metadata';
 
-import { GUARDS_METADATA, MODULE_METADATA, Type } from '@fastwa/common';
+import {
+  DynamicModule,
+  ForwardReference,
+  GUARDS_METADATA,
+  MODULE_METADATA,
+  Type
+} from '@fastwa/common';
 
 import { MetadataScanner } from './metadata-scanner';
 import { Module, FastwaContainer } from '../injector';
@@ -11,74 +17,106 @@ export class DependenciesScanner {
     private metadataScanner: MetadataScanner
   ) {}
 
-  public scan(module: any) {
-    this.scanModules(module);
-    this.scanModulesDependencies();
+  private reflectMetadata<T = any>(
+    metadataKey: string,
+    target: Type<any>
+  ): T[] {
+    return Reflect.getMetadata(metadataKey, target) || [];
   }
 
-  public async scanModules(module: any) {
-    const moduleDefinition = this.overrideModule(module);
-    this.container.addModule(moduleDefinition);
+  private reflectImports(module: any) {
+    return this.reflectMetadata(MODULE_METADATA.IMPORTS, module);
+  }
 
-    let relatedModules = [];
+  private reflectProviders(module: any) {
+    return this.reflectMetadata(MODULE_METADATA.PROVIDERS, module);
+  }
 
-    const modules = moduleDefinition.module
-      ? [moduleDefinition.module]
-      : Reflect.getMetadata(MODULE_METADATA.IMPORTS, moduleDefinition);
+  private reflectControllers(module: any) {
+    return this.reflectMetadata(MODULE_METADATA.CONTROLLERS, module);
+  }
 
-    for (const innerModule of modules || []) {
+  private reflectInjectables(module: any) {
+    return this.reflectMetadata(GUARDS_METADATA, module);
+  }
+
+  public async scan(module: any) {
+    await this.scanModules(module);
+    await this.scanModulesDependencies();
+  }
+
+  public async scanModules(moduleDefinition: any) {
+    await this.insertModule(moduleDefinition);
+
+    let registeredModules = [];
+
+    const modules = !this.isDynamcModule(moduleDefinition)
+      ? this.reflectImports(moduleDefinition)
+      : [
+          ...this.reflectImports(moduleDefinition.module),
+          ...(moduleDefinition.imports || [])
+        ];
+
+    for (const innerModule of modules) {
       const subModules = await this.scanModules(innerModule);
-      relatedModules = relatedModules.concat(subModules);
+      registeredModules = registeredModules.concat(subModules);
     }
 
-    if (!moduleDefinition) return relatedModules;
+    if (!moduleDefinition) return registeredModules;
 
-    return [moduleDefinition].concat(relatedModules);
+    return [moduleDefinition].concat(registeredModules);
   }
 
-  public scanModulesDependencies() {
+  public async scanModulesDependencies() {
     const modules = this.container.getModules();
 
-    for (const [moduleName, module] of modules) {
-      this.scanImports(module.target, moduleName);
-      this.scanProviders(module.target, moduleName);
-      this.scanControllers(module.target, moduleName);
+    for (const [token, module] of modules) {
+      await this.scanImports(module.target, token);
+      this.scanProviders(module.target, token);
+      this.scanControllers(module.target, token);
     }
   }
 
-  public scanImports(dynamicModule: Module, moduleName: string) {
-    const imports =
-      Reflect.getMetadata(MODULE_METADATA.IMPORTS, dynamicModule) || [];
+  public async scanImports(dynamicModule: Module, token: string) {
+    const imports = [
+      ...this.reflectImports(dynamicModule),
+      ...this.container.getDynamicMetadata(
+        token,
+        MODULE_METADATA.IMPORTS as 'imports'
+      )
+    ];
 
     for (const innerImport of imports) {
-      this.container.addImport(innerImport, moduleName);
+      await this.insertImport(innerImport, token);
     }
   }
 
-  public scanProviders(module: Module, moduleName: string) {
-    const providers =
-      Reflect.getMetadata(MODULE_METADATA.PROVIDERS, module) ||
-      module.providers ||
-      [];
+  public scanProviders(module: Module, token: string) {
+    const providers = [
+      ...this.reflectProviders(module),
+      ...this.container.getDynamicMetadata(
+        token,
+        MODULE_METADATA.PROVIDERS as 'providers'
+      )
+    ];
 
     for (const provider of providers) {
-      this.container.addProvider(provider, moduleName);
+      this.container.addProvider(provider, token);
     }
   }
 
-  public scanControllers(module: Type<any>, moduleName: string) {
-    const controllers =
-      Reflect.getMetadata(MODULE_METADATA.CONTROLLERS, module) || [];
+  public scanControllers(module: Type<any>, token: string) {
+    const controllers = this.reflectControllers(module);
 
     for (const controller of controllers) {
-      this.container.addController(controller, moduleName);
-      this.scanInjectables(controller, moduleName);
+      this.container.addController(controller, token);
+      this.scanInjectables(controller, token);
     }
   }
 
-  public scanInjectables(module: Type<any>, moduleName: string) {
+  public scanInjectables(module: Type<any>, token: string) {
     const getInjectable = (method: string) =>
-      Reflect.getMetadata(GUARDS_METADATA, module.prototype[method]) || [];
+      this.reflectInjectables(module.prototype[method]) || [];
 
     const methodInjectables = this.metadataScanner.scanMethods(
       module.prototype,
@@ -87,18 +125,34 @@ export class DependenciesScanner {
 
     methodInjectables.forEach((methodInjectable) => {
       methodInjectable.forEach((injectable) =>
-        this.container.addInjectable(injectable, moduleName)
+        this.container.addInjectable(injectable, token)
       );
     });
   }
 
-  private overrideModule(moduleToOverride: any) {
-    return this.isForwardReference(moduleToOverride)
-      ? moduleToOverride.forwardRef()
-      : moduleToOverride;
+  public isDynamcModule(
+    module: Type<any> | DynamicModule
+  ): module is DynamicModule {
+    return module && !!(module as DynamicModule).module;
   }
 
-  private isForwardReference(module: any) {
-    return module && !!module.forwardRef;
+  public isForwardReference(module: any): module is ForwardReference {
+    return module && !!(module as ForwardReference).forwardRef;
+  }
+
+  public insertModule(moduleDefinition: any) {
+    const moduleToAdd = this.isForwardReference(moduleDefinition)
+      ? moduleDefinition.forwardRef()
+      : moduleDefinition;
+
+    return this.container.addModule(moduleToAdd);
+  }
+
+  public async insertImport(module: any, token: string) {
+    if (this.isForwardReference(module)) {
+      return this.container.addImport(module.forwardRef(), token);
+    }
+
+    await this.container.addImport(module, token);
   }
 }

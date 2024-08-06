@@ -1,7 +1,7 @@
-import { isFunction } from '@fastwa/common';
+import { OnBootstrap, isFunction } from '@fastwa/common';
 import { Module } from '../injector';
 
-export const hasBootstrapHook = (instance: any) => {
+export const hasBootstrapHook = (instance: any): instance is OnBootstrap => {
   return isFunction(instance.onBootstrap);
 };
 

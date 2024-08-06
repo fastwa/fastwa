@@ -1,8 +1,8 @@
 import { Logger, SocketOptions, IFastwaApplication } from '@fastwa/common';
 
-import { AbstractBaileysAdapter } from './adapters';
+import { AbstractSocketAdapter } from './adapters';
 import { Injector, FastwaContainer } from './injector';
-import { loadAdapter, MESSAGES, VERSION_MESSAGE } from './helpers';
+import { loadAdapter, MESSAGES } from './helpers';
 
 import { FastwaApplication } from './fastwa-application';
 import { DependenciesScanner, MetadataScanner } from './scanner';
@@ -11,16 +11,24 @@ import { ApplicationConfig } from './application-config';
 export class FastwaFactoryStatic {
   private readonly logger = new Logger('FastwaFactory');
 
+  /**
+   * Creates an instance of the FastwaApplication.
+   * 
+   * @param module Entry application module class
+   * @param options Options to initalize the socket adapter
+
+   * @returns A promise that resolves to an application instance
+   */
   async create<T extends IFastwaApplication>(
     module: any,
-    appOptions: SocketOptions
+    options: SocketOptions
   ): Promise<T> {
     const applicationConfig = new ApplicationConfig();
     const container = new FastwaContainer(applicationConfig);
 
-    const clientRef = this.createAdapterProxy(appOptions, container);
+    const socket = this.createSocketAdapter(options, container);
 
-    await this.initialize(module, container, clientRef, appOptions.version);
+    await this.initialize(module, container, socket, options.version);
 
     return this.createFastwaInstance<T>(container);
   }
@@ -28,7 +36,7 @@ export class FastwaFactoryStatic {
   async initialize(
     module: any,
     container: FastwaContainer,
-    clientRef: AbstractBaileysAdapter,
+    socket: AbstractSocketAdapter,
     version?: number[]
   ) {
     const injector = new Injector(container);
@@ -39,25 +47,24 @@ export class FastwaFactoryStatic {
     );
 
     try {
-      this.logger.log(MESSAGES.APPLICATION_START);
-      this.logger.log(VERSION_MESSAGE(version.join('.')));
+      const release = version.join('.');
+      this.logger.log(MESSAGES.APPLICATION_START(release));
 
-      dependenciesScanner.scan(module);
-      injector.createInstances();
+      await dependenciesScanner.scan(module);
+      injector.createInstancesOfDependencies();
 
-      container.setClient(clientRef);
-      clientRef.initSocket();
+      container.setSocketAdapter(socket);
+      socket.initializeSocket();
     } catch (e) {
       process.abort();
     }
   }
-
-  private createAdapterProxy(
-    appOptions: SocketOptions,
+  private createSocketAdapter(
+    options: SocketOptions,
     container: FastwaContainer
   ) {
-    const { BaileysAdapter } = loadAdapter(() => require('@fastwa/client'));
-    return new BaileysAdapter(appOptions, container);
+    const { SocketAdapter } = loadAdapter(() => require('@fastwa/client'));
+    return new SocketAdapter(options, container);
   }
 
   private createFastwaInstance<T>(container: FastwaContainer): T {
@@ -65,4 +72,10 @@ export class FastwaFactoryStatic {
   }
 }
 
+/**
+ * Use FastwaFactory to create an application instance.
+ *
+ * ### Entry module
+ *
+ */
 export const FastwaFactory = new FastwaFactoryStatic();

@@ -2,20 +2,22 @@ import {
   Type,
   InstanceOptions,
   PARAMTYPES_METADATA,
-  Logger
+  Logger,
+  SELF_DECLARED_DEPS_METADATA
 } from '@fastwa/common';
 
 import { Module } from './module';
 import { FastwaContainer } from './container';
 import { MODULE_INIT_MESSAGE } from '../helpers/messages.helper';
+import { SettlementSignal } from './settlement-signal';
 
 export class Injector {
   private logger = new Logger(Injector.name);
-  private instances = new Map<string, any>();
+  private collection = new Map<string, any>();
 
   constructor(private readonly container: FastwaContainer) {}
 
-  public createInstances(
+  public createInstancesOfDependencies(
     modules: Map<string, Module> = this.container.getModules()
   ) {
     modules.forEach((module) => {
@@ -25,23 +27,43 @@ export class Injector {
     });
   }
 
-  public resolveConstructorParams<T>(target: Type<T>): Type<T> {
-    if (this.instances.has(target.name)) {
-      return this.instances.get(target.name);
+  private reflectSelfParams<T>(type: Type<T>): any[] {
+    return Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, type) || [];
+  }
+
+  private reflectConstructorParams<T>(type: Type<T>): any[] {
+    const paramtypes = [
+      ...(Reflect.getMetadata(PARAMTYPES_METADATA, type) || [])
+    ];
+
+    const selfParams = this.reflectSelfParams<T>(type);
+
+    selfParams.forEach(({ index, param }) => (paramtypes[index] = param));
+    return paramtypes;
+  }
+
+  public getClassDependencies<T>(metatype: Type<T>): any[] {
+    return this.reflectConstructorParams(metatype);
+  }
+
+  public resolveInstance<T>(metatype: Type<T>): Type<T> {
+    if (this.collection.has(metatype.name)) {
+      return this.collection.get(metatype.name);
     }
 
-    const services = Reflect.getMetadata(PARAMTYPES_METADATA, target) || [];
+    const dependencies = this.getClassDependencies(metatype);
 
-    const injections = services.map((i) => this.resolveConstructorParams(i));
-    const instance = new target(...injections);
+    const resolveParam = (param: unknown, index: number) => {
+      const type = this.forwardReference(param);
+      return this.resolveInstance(type);
+    };
 
-    this.instances.set(target.name, instance);
+    const resolvedDependencies = dependencies.map(resolveParam);
+    const instance = new metatype(...resolvedDependencies);
 
-    const resolvedInstance = this.isContainer(target)
-      ? this.container
-      : instance;
+    this.collection.set(metatype.name, instance);
 
-    return resolvedInstance as Type<T>;
+    return this.replaceContainer(metatype, instance) as Type<T>;
   }
 
   public loadControllers(module: Module) {
@@ -49,7 +71,7 @@ export class Injector {
 
     controllers.forEach((controller) => {
       this.loadInstance(controller);
-      this.logger.log(MODULE_INIT_MESSAGE(controller.name));
+      this.logger.info(MODULE_INIT_MESSAGE(controller.name));
     });
   }
 
@@ -58,7 +80,7 @@ export class Injector {
 
     providers.forEach((provider) => {
       this.loadInstance(provider);
-      this.logger.log(MODULE_INIT_MESSAGE(provider.name));
+      this.logger.info(MODULE_INIT_MESSAGE(provider.name));
     });
   }
 
@@ -72,15 +94,36 @@ export class Injector {
 
   public loadInstance(target: InstanceOptions) {
     const { metatype, instance } = target;
+    const settlementSignal = this.applySettlementSignal(target);
 
-    if (!instance) {
-      target.instance = this.resolveConstructorParams(metatype);
+    if (instance) {
+      return settlementSignal.complete();
     }
+
+    target.instance = this.resolveInstance(metatype);
+
+    settlementSignal.complete();
 
     return target.instance;
   }
 
-  private isContainer(metatype: Type<any>) {
-    return metatype.prototype === FastwaContainer.prototype;
+  private replaceContainer<T>(metatype: Type<any>, instance: T) {
+    return metatype.prototype === FastwaContainer.prototype
+      ? this.container
+      : instance;
+  }
+
+  private forwardReference(param: Type<any> | any) {
+    if (!param.forwardRef) {
+      return param;
+    }
+
+    return param.forwardRef();
+  }
+  public applySettlementSignal(target: InstanceOptions) {
+    const settlementSignal = new SettlementSignal();
+    target.settlementSignal = settlementSignal;
+
+    return settlementSignal;
   }
 }

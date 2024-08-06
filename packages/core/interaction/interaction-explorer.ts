@@ -15,18 +15,18 @@ import {
 
 import { FastwaContainer } from '../injector/container';
 import { MetadataScanner } from '../scanner/metadata-scanner';
-import { MAPPED_COMMAND_MESSAGE } from '../helpers/messages.helper';
+import { MAPPED_INTERACTION_MESSAGE } from '../helpers/messages.helper';
 
-import { AbstractBaileysAdapter } from '../adapters';
+import { AbstractSocketAdapter } from '../adapters';
 
 export class InteractionExplorer {
   private logger = new Logger(InteractionExplorer.name);
 
-  private clientRef: AbstractBaileysAdapter;
+  private socketRef: AbstractSocketAdapter;
   private metadataScanner: MetadataScanner;
 
   constructor(private readonly container: FastwaContainer) {
-    this.clientRef = this.container.getClient();
+    this.socketRef = this.container.getSocketRef();
     this.metadataScanner = new MetadataScanner();
   }
 
@@ -82,7 +82,7 @@ export class InteractionExplorer {
 
       switch (type) {
         case InteractionType.COMMAND:
-          this.logger.log(MAPPED_COMMAND_MESSAGE(interactionName));
+          this.logger.info(MAPPED_INTERACTION_MESSAGE(interactionName));
           this.container.addCommand(interactionName, {
             moduleName,
             ...command
@@ -104,7 +104,7 @@ export class InteractionExplorer {
     controllers: Map<IController, InstanceOptions>
   ) {
     controllers.forEach(({ instance }) => {
-      this.assignSocketToProperties(instance, this.clientRef.socket);
+      this.assignSocketToProperties(instance, this.socketRef.socket);
     });
   }
 

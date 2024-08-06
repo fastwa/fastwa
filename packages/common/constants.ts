@@ -3,6 +3,10 @@ export const MODULE_METADATA = {
   PROVIDERS: 'providers',
   CONTROLLERS: 'controllers'
 };
+
+export const SELF_DECLARED_DEPS_METADATA = 'self:paramtypes';
+export const PROPERTY_DEPS_METADATA = 'self:properties_metadata';
+
 export const TYPE_METADATA = 'type';
 export const EVENT_METADATA = 'event';
 export const INTERACTION_METADATA = 'name';
