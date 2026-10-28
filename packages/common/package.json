@@ -17,7 +17,8 @@
   "peerDependencies": {
     "class-transformer": "*",
     "class-validator": "*",
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "^0.1.12",
+    "@whiskeysockets/baileys": "^7.0.0-rc14"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d"
 }
