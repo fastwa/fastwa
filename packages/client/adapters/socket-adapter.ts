@@ -14,6 +14,7 @@ import {
   Interaction,
   SocketConnectionState,
   ReactionMessage,
+  ReconnectOptions,
   Logger
 } from '@fastwa/common';
 
@@ -31,9 +32,6 @@ import { PipesConsumer } from '@fastwa/core/pipes';
 import { GuardsConsumer, GuardsContext } from '@fastwa/core/guards';
 import { ValidationException } from '@fastwa/common/exceptions';
 
-const RECONNECT_BASE_DELAY_MS = 1000;
-const RECONNECT_MAX_DELAY_MS = 30000;
-
 // Reconnecting would fail again or fight over the session with another client
 const FATAL_DISCONNECT_REASONS = [
   DisconnectReason.loggedOut,
@@ -41,12 +39,22 @@ const FATAL_DISCONNECT_REASONS = [
   DisconnectReason.forbidden
 ];
 
+const DEFAULT_RECONNECT_OPTIONS: Required<Omit<ReconnectOptions, 'onGiveUp'>> =
+  {
+    maxAttempts: Infinity,
+    baseDelayMs: 1000,
+    maxDelayMs: 30000,
+    shouldReconnect: (statusCode) =>
+      !FATAL_DISCONNECT_REASONS.includes(statusCode)
+  };
+
 export class SocketAdapter extends AbstractSocketAdapter {
   socket: WASocket;
 
   private reconnectAttempts = 0;
   private readonly logger = new Logger(SocketAdapter.name);
   private readonly credsListeners = new Set<() => Promise<any>>();
+  private readonly reconnectOptions: ReconnectOptions | null;
 
   interactionProxy: InteractionProxy;
   interactionFactory: InteractionFactory;
@@ -58,6 +66,7 @@ export class SocketAdapter extends AbstractSocketAdapter {
   ) {
     super();
 
+    this.reconnectOptions = this.resolveReconnectOptions(options.reconnect);
     this.interactionFactory = new InteractionFactory();
     this.responseController = new MessageResponseController();
 
@@ -75,7 +84,7 @@ export class SocketAdapter extends AbstractSocketAdapter {
   }
 
   public initializeSocket() {
-    const { saveCreds, ...options } = this.options;
+    const { saveCreds, reconnect, ...options } = this.options;
 
     this.socket = makeWASocket({
       ...options,
@@ -118,31 +127,82 @@ export class SocketAdapter extends AbstractSocketAdapter {
         }
 
         if (connection === SocketConnectionState.CLOSE) {
-          const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+          const statusCode = (lastDisconnect?.error as Boom)?.output
+            ?.statusCode;
           this.handleDisconnect(statusCode);
         }
       }
     );
   }
 
+  private resolveReconnectOptions(
+    reconnect: SocketOptions['reconnect'] = true
+  ): ReconnectOptions | null {
+    if (reconnect === false) {
+      return null;
+    }
+
+    return {
+      ...DEFAULT_RECONNECT_OPTIONS,
+      ...(reconnect === true ? {} : reconnect)
+    };
+  }
+
   private handleDisconnect(statusCode?: number) {
-    if (FATAL_DISCONNECT_REASONS.includes(statusCode)) {
-      this.logger.log(
-        `Connection closed (${DisconnectReason[statusCode]}), not reconnecting`
-      );
+    // restartRequired is part of the pairing flow, not a drop, so it always
+    // reconnects immediately and does not count as an attempt
+    if (statusCode === DisconnectReason.restartRequired) {
+      setTimeout(() => this.reconnect(), 0);
       return;
     }
 
-    // restartRequired is expected (e.g. right after pairing), so it is immediate
-    const delay =
-      statusCode === DisconnectReason.restartRequired
-        ? 0
-        : Math.min(
-            RECONNECT_BASE_DELAY_MS * 2 ** this.reconnectAttempts++,
-            RECONNECT_MAX_DELAY_MS
-          );
+    if (!this.reconnectOptions) {
+      this.logDisconnect(statusCode, 'reconnect is disabled');
+      return;
+    }
+
+    const { shouldReconnect, maxAttempts, baseDelayMs, maxDelayMs } =
+      this.reconnectOptions;
+
+    if (!shouldReconnect(statusCode)) {
+      this.giveUp(statusCode, 'not reconnecting');
+      return;
+    }
+
+    if (this.reconnectAttempts >= maxAttempts) {
+      this.giveUp(statusCode, `gave up after ${maxAttempts} attempts`);
+      return;
+    }
+
+    const delay = Math.min(
+      baseDelayMs * 2 ** this.reconnectAttempts++,
+      maxDelayMs
+    );
 
     setTimeout(() => this.reconnect(), delay);
+  }
+
+  private giveUp(statusCode: number | undefined, reason: string) {
+    this.logDisconnect(statusCode, reason);
+
+    // new Promise also catches synchronous throws from the user callback
+    new Promise((resolve) =>
+      resolve(this.reconnectOptions.onGiveUp?.(statusCode))
+    ).catch((error) =>
+      this.logger.log(`onGiveUp failed: ${error?.message ?? error}`)
+    );
+  }
+
+  private logDisconnect(statusCode: number | undefined, reason: string) {
+    // Some reasons share a code (connectionLost and timedOut are both 408),
+    // so the code is always logged
+    const name = DisconnectReason[statusCode];
+    const label =
+      statusCode === undefined
+        ? 'unknown'
+        : [statusCode, name].filter(Boolean).join(' ');
+
+    this.logger.log(`Connection closed (${label}), ${reason}`);
   }
 
   public useSaveCreds(saveCreds: () => Promise<void>) {
