@@ -13,7 +13,8 @@ import {
   LogLevels,
   Interaction,
   SocketConnectionState,
-  ReactionMessage
+  ReactionMessage,
+  Logger
 } from '@fastwa/common';
 
 import {
@@ -30,8 +31,21 @@ import { PipesConsumer } from '@fastwa/core/pipes';
 import { GuardsConsumer, GuardsContext } from '@fastwa/core/guards';
 import { ValidationException } from '@fastwa/common/exceptions';
 
+const RECONNECT_BASE_DELAY_MS = 1000;
+const RECONNECT_MAX_DELAY_MS = 30000;
+
+// Reconnecting would fail again or fight over the session with another client
+const FATAL_DISCONNECT_REASONS = [
+  DisconnectReason.loggedOut,
+  DisconnectReason.connectionReplaced,
+  DisconnectReason.forbidden
+];
+
 export class SocketAdapter extends AbstractSocketAdapter {
   socket: WASocket;
+
+  private reconnectAttempts = 0;
+  private readonly logger = new Logger(SocketAdapter.name);
 
   interactionProxy: InteractionProxy;
   interactionFactory: InteractionFactory;
@@ -59,7 +73,7 @@ export class SocketAdapter extends AbstractSocketAdapter {
     );
   }
 
-  public initializeSocket(restartRequired?: boolean) {
+  public initializeSocket() {
     const { saveCreds, ...options } = this.options;
 
     this.socket = makeWASocket({
@@ -67,12 +81,13 @@ export class SocketAdapter extends AbstractSocketAdapter {
       logger: pino({ level: LogLevels.SILENT })
     });
 
-    if (restartRequired) {
-      this.listen();
-    }
-
     this.responseController.setSocket(this.socket);
     saveCreds && this.useSaveCreds(saveCreds);
+  }
+
+  private reconnect() {
+    this.initializeSocket();
+    this.listen();
   }
 
   public listen() {
@@ -91,17 +106,36 @@ export class SocketAdapter extends AbstractSocketAdapter {
     this.socket.ev.on(
       WAEvent.CONNECTION_UPDATE,
       ({ connection, lastDisconnect }) => {
+        if (connection === SocketConnectionState.OPEN) {
+          this.reconnectAttempts = 0;
+        }
+
         if (connection === SocketConnectionState.CLOSE) {
-          const statusCode = (lastDisconnect.error as Boom)?.output?.statusCode;
-
-          const restartRequired =
-            statusCode === DisconnectReason.loggedOut ||
-            statusCode === DisconnectReason.restartRequired;
-
-          restartRequired && this.initializeSocket(restartRequired);
+          const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+          this.handleDisconnect(statusCode);
         }
       }
     );
+  }
+
+  private handleDisconnect(statusCode?: number) {
+    if (FATAL_DISCONNECT_REASONS.includes(statusCode)) {
+      this.logger.log(
+        `Connection closed (${DisconnectReason[statusCode]}), not reconnecting`
+      );
+      return;
+    }
+
+    // restartRequired is expected (e.g. right after pairing), so it is immediate
+    const delay =
+      statusCode === DisconnectReason.restartRequired
+        ? 0
+        : Math.min(
+            RECONNECT_BASE_DELAY_MS * 2 ** this.reconnectAttempts++,
+            RECONNECT_MAX_DELAY_MS
+          );
+
+    setTimeout(() => this.reconnect(), delay);
   }
 
   public useSaveCreds(saveCreds: () => Promise<void>) {
