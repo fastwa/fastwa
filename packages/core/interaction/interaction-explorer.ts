@@ -104,15 +104,24 @@ export class InteractionExplorer {
     controllers: Map<IController, InstanceOptions>
   ) {
     controllers.forEach(({ instance }) => {
-      this.assignSocketToProperties(instance, this.socketRef.socket);
+      this.assignSocketToProperties(instance, this.socketRef);
     });
   }
 
-  public assignSocketToProperties(instance: Type<object>, clientRef: WASocket) {
-    const serverHooks = this.metadataScanner.scanServerHooks(instance);
+  public assignSocketToProperties(
+    instance: Type<object>,
+    socketRef: AbstractSocketAdapter
+  ) {
+    const serverHooks = [...this.metadataScanner.scanServerHooks(instance)];
 
+    // A getter instead of a copy: the adapter creates a new socket on every
+    // reconnect, and @Socket() properties must always point to the current one
     for (const property of serverHooks) {
-      Reflect.set(instance, property, clientRef);
+      Object.defineProperty(instance, property, {
+        get: (): WASocket => socketRef.socket,
+        enumerable: true,
+        configurable: true
+      });
     }
   }
 
