@@ -46,6 +46,7 @@ export class SocketAdapter extends AbstractSocketAdapter {
 
   private reconnectAttempts = 0;
   private readonly logger = new Logger(SocketAdapter.name);
+  private readonly credsListeners = new Set<() => Promise<any>>();
 
   interactionProxy: InteractionProxy;
   interactionFactory: InteractionFactory;
@@ -82,7 +83,13 @@ export class SocketAdapter extends AbstractSocketAdapter {
     });
 
     this.responseController.setSocket(this.socket);
-    saveCreds && this.useSaveCreds(saveCreds);
+    saveCreds && this.credsListeners.add(saveCreds);
+
+    // Re-register on every new socket, so credentials keep being saved
+    // after a reconnect
+    this.credsListeners.forEach((listener) =>
+      this.socket.ev.on(WAEvent.CREDS_UPDATE, listener)
+    );
   }
 
   private reconnect() {
@@ -139,6 +146,11 @@ export class SocketAdapter extends AbstractSocketAdapter {
   }
 
   public useSaveCreds(saveCreds: () => Promise<void>) {
+    if (this.credsListeners.has(saveCreds)) {
+      return;
+    }
+
+    this.credsListeners.add(saveCreds);
     this.socket.ev.on(WAEvent.CREDS_UPDATE, saveCreds);
   }
 
