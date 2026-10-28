@@ -22,7 +22,8 @@ export function createMessageCollector(
   return new Promise((resolve) => {
     const onMessagesUpsert = ({ messages }: IMessagesUpsertEvent) => {
       const msg = messages[0];
-      const jidIsAuthor = msg.key.remoteJid === remoteJid;
+      const jidIsAuthor =
+        msg.key.remoteJid === remoteJid || msg.key.remoteJidAlt === remoteJid;
 
       if (jidIsAuthor && filter(msg)) {
         socket.ev.off(WAEvent.MESSAGES_UPSERT, onMessagesUpsert);
