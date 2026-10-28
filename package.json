@@ -41,5 +41,10 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "overrides": {
+    "nx": {
+      "undici": "^7.30.1"
+    }
+  }
 }
