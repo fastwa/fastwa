@@ -13,8 +13,7 @@
     "prebuild": "tsc -b --clean packages",
     "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --rs sample/01-stickers/src/main.ts",
     "build": "tsc -b -v packages",
-    "publish": "npm run prebuild && npm run build && lerna publish --force-publish --exact -m \"chore(@fastwa) publish %s release\"",
-    "changelog": "lerna-changelog"
+    "publish": "npm run prebuild && npm run build && lerna publish --force-publish --exact -m \"chore(@fastwa) publish %s release\""
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
@@ -36,20 +35,9 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "lerna": "^10.1.1",
-    "lerna-changelog": "^2.2.0",
     "prettier": "^2.8.8",
     "tsconfig-paths": "^4.0.0",
     "typescript": "^5.5.4"
-  },
-  "changelog": {
-    "labels": {
-      "type: feature :tada:": "Features",
-      "type: bug :sob:": "Bug fixes",
-      "type: enhancement :wolf:": "Enhancements",
-      "type: docs :page_facing_up:": "Docs",
-      "type: code style": "Code style tweaks",
-      "dependencies": "Dependencies"
-    }
   },
   "workspaces": [
     "packages/*"
