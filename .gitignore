@@ -40,7 +40,10 @@ bower_components
 
 # Misc
 .fastwa
-sample/
+
+# Samples: only official samples are tracked
+sample/*
+!sample/01-ai-sdk/
 
 # OS metadata
 .DS_Store
