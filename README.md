@@ -30,6 +30,15 @@ Fastwa is an open source project and an excellent way if you want an easy start.
 * [가이드](https://docs.fastwa.org) 문서는 [docs.fastwa.org](https://docs.fastwa.org)에서 확인하실 수 있습니다. :books:
 * [ガイド](https://docs.fastwa.org)は [docs.fastwa.org](https://docs.fastwa.org)でご確認ください。 :books:
 
+## Requirements
+* Node.js >= 20.19.0
+* [Baileys](https://github.com/WhiskeySockets/Baileys) 7 (`@whiskeysockets/baileys@7.0.0-rc14`)
+
+### Upgrading to Baileys v7
+Read the official [v7 migration guide](https://baileys.wiki/migration/v7#v7-migration). What changes for Fastwa apps:
+* **LIDs:** `@RemoteJid()` may return a LID (`123@lid`) instead of a phone number JID. Use `@RemoteJidAlt()` to get the other format. `createMessageCollector` accepts either one.
+* **Auth state:** custom auth stores must support the `lid-mapping`, `device-list` and `tctoken` keys. `useMultiFileAuthState` already does.
+* **QR code:** Fastwa does not render QR codes, and Baileys deprecated `printQRInTerminal`. Listen to `connection.update` and handle the `qr` field yourself (e.g. with `qrcode-terminal`).
 
 ## Contributing
 ### Contributing Guidelines
