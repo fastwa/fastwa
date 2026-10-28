@@ -22,5 +22,8 @@
     "@fastwa/common": "^1.0.0",
     "@fastwa/core": "^1.0.0"
   },
-  "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d"
+  "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d",
+  "engines": {
+    "node": ">=20.19.0"
+  }
 }
