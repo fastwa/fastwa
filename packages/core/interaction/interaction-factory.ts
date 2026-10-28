@@ -45,6 +45,8 @@ export class InteractionFactory {
         return property && msg ? msg[property] : msg;
       case ParamType.REMOTE_JID:
         return msg.key.remoteJid;
+      case ParamType.REMOTE_JID_ALT:
+        return msg.key.remoteJidAlt;
       case ParamType.QUOTED:
         return msg.message.extendedTextMessage?.contextInfo.quotedMessage;
       case ParamType.CONTENT:

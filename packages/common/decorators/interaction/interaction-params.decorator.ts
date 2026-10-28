@@ -61,6 +61,15 @@ export const Quoted = () => paramDecoratorFactory(ParamType.QUOTED)(undefined);
 export const RemoteJid = () =>
   paramDecoratorFactory(ParamType.REMOTE_JID)(undefined);
 
+/**
+ * Extracts the alternate JID of the chat (`msg.key.remoteJidAlt`).
+ * When `@RemoteJid()` is a LID, this is the phone number JID, and vice versa.
+ *
+ * @publicApi
+ */
+export const RemoteJidAlt = () =>
+  paramDecoratorFactory(ParamType.REMOTE_JID_ALT)(undefined);
+
 export const Content = () =>
   paramDecoratorFactory(ParamType.CONTENT)(undefined);
 

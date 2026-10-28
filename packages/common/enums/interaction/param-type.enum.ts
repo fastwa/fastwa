@@ -4,5 +4,6 @@ export enum ParamType {
   ARGS,
   REMOTE_JID,
   QUOTED,
-  VOTE
+  VOTE,
+  REMOTE_JID_ALT
 }
