@@ -40,6 +40,25 @@ Read the official [v7 migration guide](https://baileys.wiki/migration/v7#v7-migr
 * **Auth state:** custom auth stores must support the `lid-mapping`, `device-list` and `tctoken` keys. `useMultiFileAuthState` already does.
 * **QR code:** Fastwa does not render QR codes, and Baileys deprecated `printQRInTerminal`. Listen to `connection.update` and handle the `qr` field yourself (e.g. with `qrcode-terminal`).
 
+## Reconnection
+Fastwa reconnects automatically when the connection drops, with exponential backoff (1s up to 30s). It stops on `loggedOut`, `connectionReplaced` and `forbidden`. Customize it with the `reconnect` option:
+
+```ts
+const app = await FastwaFactory.create(AppModule, {
+  auth: state,
+  version,
+  reconnect: {
+    maxAttempts: 10, // default: Infinity
+    baseDelayMs: 1000, // default: 1000
+    maxDelayMs: 30000, // default: 30000
+    shouldReconnect: (statusCode) => statusCode !== DisconnectReason.loggedOut,
+    onGiveUp: (statusCode) => process.exit(1) // e.g. let your process manager restart it
+  }
+});
+```
+
+Use `reconnect: false` to handle disconnects yourself through `@On('connection.update')`. `restartRequired` always reconnects, since it is part of the pairing flow.
+
 ## Contributing
 ### Contributing Guidelines
 Read through our [contributing guidelines](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md) to learn about our submission process, coding rules, and more.
