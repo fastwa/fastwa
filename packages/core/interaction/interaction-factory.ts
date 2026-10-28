@@ -82,7 +82,7 @@ export class InteractionFactory {
 
   public getKeys(interactionName: string) {
     return isString(interactionName)
-      ? interactionName.match(MESSAGE_REGEX.PARAM_KEYS)
+      ? interactionName.match(MESSAGE_REGEX.PARAM_KEYS) || []
       : [];
   }
 
