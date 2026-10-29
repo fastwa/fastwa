@@ -1,13 +1,13 @@
+import { FastwaFactory } from 'fastwa';
+import { BaileysAdapter } from '@fastwa/baileys';
+
 import {
   Browsers,
   fetchLatestBaileysVersion,
   useMultiFileAuthState
 } from '@whiskeysockets/baileys';
 
-import { FastwaFactory } from 'fastwa';
-import { BaileysAdapter } from '@fastwa/baileys';
-
-import { AIModule } from './ai.module.js';
+import { AIModule } from './ai.module';
 
 async function bootstrap() {
   const { version } = await fetchLatestBaileysVersion();

@@ -1,7 +1,7 @@
 import { Module } from 'fastwa';
 
-import { AiController } from './ai.controller.js';
-import { AiService } from './ai.service.js';
+import { AiController } from './ai.controller';
+import { AiService } from './ai.service';
 
 @Module({
   controllers: [AiController],

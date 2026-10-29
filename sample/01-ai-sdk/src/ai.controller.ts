@@ -19,9 +19,9 @@ import {
 
 import qrcode from 'qrcode-terminal';
 
-import { DMGuard } from './dm.guard.js';
-import { AiService } from './ai.service.js';
-import { ContentGuard } from './content.guard.js';
+import { DMGuard } from './dm.guard';
+import { AiService } from './ai.service';
+import { ContentGuard } from './content.guard';
 
 // Matches every message; the guards decide which ones are answered
 const ANY_MESSAGE = /^[\s\S]*$/;

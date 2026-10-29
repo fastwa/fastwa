@@ -4,7 +4,6 @@
   "description": "Fastwa sample: the framework basics in a small WhatsApp bot",
   "private": true,
   "license": "MIT",
-  "type": "module",
   "engines": {
     "node": ">=22.12.0"
   },

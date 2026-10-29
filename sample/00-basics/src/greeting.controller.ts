@@ -5,7 +5,7 @@ import { Message, Socket } from '@fastwa/baileys';
 
 import qrcode from 'qrcode-terminal';
 
-import { GreetingService } from './greeting.service.js';
+import { GreetingService } from './greeting.service';
 
 @Controller()
 export class GreetingController {

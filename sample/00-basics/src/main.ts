@@ -1,26 +1,24 @@
+import { FastwaFactory } from 'fastwa';
+import { BaileysAdapter } from '@fastwa/baileys';
+
 import {
   Browsers,
   fetchLatestBaileysVersion,
   useMultiFileAuthState
 } from '@whiskeysockets/baileys';
 
-import { FastwaFactory } from 'fastwa';
-import { BaileysAdapter } from '@fastwa/baileys';
-
-import { GreetingModule } from './greeting.module.js';
+import { GreetingModule } from './greeting.module';
 
 async function bootstrap() {
-  const { state, saveCreds } = await useMultiFileAuthState('auth');
   const { version } = await fetchLatestBaileysVersion();
+  const { state, saveCreds } = await useMultiFileAuthState('auth');
 
-  const adapter = new BaileysAdapter({
+  const app = await FastwaFactory.create(GreetingModule, new BaileysAdapter({
     auth: state,
     saveCreds,
     version,
     browser: Browsers.macOS('Fastwa Basics')
-  });
-
-  const app = await FastwaFactory.create(GreetingModule, adapter);
+  }));
 
   await app.listen();
 }
