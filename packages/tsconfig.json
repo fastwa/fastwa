@@ -5,7 +5,7 @@
       "path": "./fastwa/tsconfig.build.json"
     },
     {
-      "path": "./client/tsconfig.build.json"
+      "path": "./baileys/tsconfig.build.json"
     },
     {
       "path": "./builders/tsconfig.build.json"

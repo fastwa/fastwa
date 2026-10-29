@@ -22,7 +22,7 @@
     "tslib": "2.4.1"
   },
   "peerDependencies": {
-    "@fastwa/client": "^1.0.0",
+    "@fastwa/baileys": "^1.0.0",
     "@whiskeysockets/baileys": "^7.0.0-rc14",
     "class-transformer": "*",
     "class-validator": "*",
