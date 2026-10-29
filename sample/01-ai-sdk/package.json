@@ -4,7 +4,6 @@
   "description": "Fastwa sample: WhatsApp assistant powered by the Vercel AI SDK and Claude",
   "private": true,
   "license": "MIT",
-  "type": "module",
   "engines": {
     "node": ">=22.12.0"
   },
