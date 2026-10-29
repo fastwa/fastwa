@@ -1,7 +1,7 @@
 import { anthropic, type AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { generateText, stepCountIs, type UserContent } from 'ai';
 
-import { Injectable } from '@fastwa/common';
+import { Injectable } from 'fastwa';
 import type { WAMessage, WASocket } from '@whiskeysockets/baileys';
 
 import { createTools } from './tools.js';

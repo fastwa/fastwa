@@ -6,7 +6,7 @@ import {
   useMultiFileAuthState
 } from '@whiskeysockets/baileys';
 
-import { FastwaFactory } from '@fastwa/core';
+import { FastwaFactory } from 'fastwa';
 
 import { AppModule } from './app.module.js';
 

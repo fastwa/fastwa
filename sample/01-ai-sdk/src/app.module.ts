@@ -1,4 +1,4 @@
-import { Module } from '@fastwa/common';
+import { Module } from 'fastwa';
 
 import { AiController } from './ai.controller.js';
 import { AiService } from './ai.service.js';

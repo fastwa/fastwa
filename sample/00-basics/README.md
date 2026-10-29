@@ -15,7 +15,7 @@ npm run dev   # builds and starts the bot
 
 Scan the QR code printed in the terminal with WhatsApp (*Linked devices*). The session is saved in `auth/`; delete it to pair again.
 
-> This sample uses the local fastwa packages (`file:../../packages/*`), so build them first with `npm run build` at the repository root. In your own project, depend on the published `@fastwa/*` packages instead.
+> This sample uses the local fastwa packages (`file:../../packages/*`), so build them first with `npm run build` at the repository root. In your own project, depend on the published `fastwa` and `@fastwa/baileys` packages instead.
 
 ## Usage
 

@@ -17,7 +17,7 @@ import {
   RemoteJid,
   Socket,
   UseGuards
-} from '@fastwa/common';
+} from 'fastwa';
 
 import qrcode from 'qrcode-terminal';
 

@@ -1,6 +1,6 @@
 import type { WASocket } from '@whiskeysockets/baileys';
 
-import { Command, Controller, Message, On, Socket } from '@fastwa/common';
+import { Command, Controller, Message, On, Socket } from 'fastwa';
 
 import qrcode from 'qrcode-terminal';
 

@@ -1,6 +1,6 @@
 import { isLidUser, isPnUser } from '@whiskeysockets/baileys';
 
-import { CanActivate, ExecutionContext, Injectable } from '@fastwa/common';
+import { CanActivate, ExecutionContext, Injectable } from 'fastwa';
 
 // Only lets through messages received in private chats. Groups, broadcasts
 // and channels are ignored, and so are the bot's own messages, which
