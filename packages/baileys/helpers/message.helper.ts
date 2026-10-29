@@ -8,7 +8,9 @@ import {
   toNumber
 } from '@whiskeysockets/baileys';
 
-import { FastwaMessage, FastwaQuotedMessage, ReactionMessage } from 'fastwa';
+import { FastwaMessage, FastwaQuotedMessage } from 'fastwa';
+
+import { ReactionMessage } from '../interfaces';
 
 export const BAILEYS_PLATFORM = 'baileys';
 

@@ -22,6 +22,3 @@ export function createAdapterPropertyDecorator<TAdapter = any>(
     );
   };
 }
-
-export const Socket = () =>
-  createAdapterPropertyDecorator((adapter: any) => adapter.socket);

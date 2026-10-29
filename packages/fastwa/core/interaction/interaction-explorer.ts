@@ -84,11 +84,11 @@ export class InteractionExplorer {
           return;
 
         case InteractionType.REACTION:
-          this.container.addReaction(interactionName, command);
+          this.container.addReaction(interactionName as string, command);
           return;
 
         case InteractionType.ON:
-          this.container.addEvent(interactionName, command);
+          this.container.addEvent(interactionName as string, command);
           return;
       }
     });

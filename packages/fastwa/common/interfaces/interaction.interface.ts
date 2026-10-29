@@ -1,15 +1,9 @@
 import { Type } from './type.interface';
 import { InteractionType } from '../enums';
-import { BaileysEvent, WAMessageKey, proto } from '@whiskeysockets/baileys';
-
-export interface ReactionMessage {
-  key: WAMessageKey;
-  reaction: proto.IReaction;
-}
 
 export interface Interaction {
   method: string;
-  command: string | BaileysEvent;
+  command: string | RegExp;
   moduleName?: string;
   type: InteractionType;
   instance: Type<object>;

@@ -2,7 +2,7 @@ import { Interaction } from '../../common';
 
 export class CollectionContainer {
   private readonly _events = new Map<string, Interaction>();
-  private readonly _commands = new Map<string, Interaction>();
+  private readonly _commands = new Map<string | RegExp, Interaction>();
   private readonly _reactions = new Map<string, Interaction>();
 
   get events() {
@@ -31,7 +31,7 @@ export class CollectionContainer {
     return command;
   }
 
-  public addCommand(name: string, command: Interaction) {
+  public addCommand(name: string | RegExp, command: Interaction) {
     if (this._commands.has(name)) {
       throw new Error(`Command ${name} already exists`);
     }

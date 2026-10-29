@@ -41,7 +41,6 @@
     "tslib": "2.4.1"
   },
   "peerDependencies": {
-    "@whiskeysockets/baileys": "^7.0.0-rc14",
     "class-transformer": "*",
     "class-validator": "*",
     "reflect-metadata": "^0.1.13 || ^0.2.0"

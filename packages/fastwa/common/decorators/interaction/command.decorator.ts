@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 
-import { WAEvent, InteractionType } from '../..';
+import { InteractionType } from '../../enums';
 import { INTERACTION_METADATA, TYPE_METADATA } from '../../constants';
-
-import { BaileysEventMap } from '@whiskeysockets/baileys';
 
 export interface InteractionMetadata {
   name?: string | RegExp;
@@ -43,18 +41,21 @@ export const commandDecoratorFactory = () => (name: string | RegExp) => {
   });
 };
 
-export const eventDecoratorFactory =
-  () => (property: keyof BaileysEventMap | WAEvent) => {
-    return interactionMapping({
-      name: property,
-      type: InteractionType.ON
-    });
-  };
+/**
+ * Handles a platform event, e.g. `connection.update` with `@fastwa/baileys`.
+ * The handler receives the event payload.
+ *
+ * @publicApi
+ */
+export const eventDecoratorFactory = () => (event: string) => {
+  return interactionMapping({
+    name: event,
+    type: InteractionType.ON
+  });
+};
 
 export const Command = commandDecoratorFactory();
 
 export const Reaction = interactionDecoratorFactory(InteractionType.REACTION);
-
-export const Poll = interactionDecoratorFactory(InteractionType.POLL);
 
 export const On = eventDecoratorFactory();

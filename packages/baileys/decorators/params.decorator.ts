@@ -1,6 +1,8 @@
 import { WAMessage, proto } from '@whiskeysockets/baileys';
 
-import { FastwaMessage, ReactionMessage, createParamDecorator } from 'fastwa';
+import { FastwaMessage, createParamDecorator } from 'fastwa';
+
+import { ReactionMessage } from '../interfaces';
 
 type BaileysMessage = FastwaMessage<WAMessage | ReactionMessage>;
 

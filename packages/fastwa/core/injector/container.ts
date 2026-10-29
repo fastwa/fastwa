@@ -73,7 +73,7 @@ export class FastwaContainer {
     return reaction;
   }
 
-  public addCommand(name: string, command: Interaction) {
+  public addCommand(name: string | RegExp, command: Interaction) {
     this.collection.addCommand(name, command);
     return command;
   }
