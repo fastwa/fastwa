@@ -1,4 +1,9 @@
-import { WAMessage, normalizeMessageContent } from '@whiskeysockets/baileys';
+import {
+  WAMessage,
+  getContentType,
+  normalizeMessageContent,
+  proto
+} from '@whiskeysockets/baileys';
 
 import {
   Interaction,
@@ -48,7 +53,7 @@ export class InteractionFactory {
       case ParamType.REMOTE_JID_ALT:
         return msg.key.remoteJidAlt;
       case ParamType.QUOTED:
-        return msg.message.extendedTextMessage?.contextInfo.quotedMessage;
+        return this.getQuotedMessage(msg);
       case ParamType.CONTENT:
         return messageContent;
       case ParamType.ARGS:
@@ -71,6 +76,15 @@ export class InteractionFactory {
       content?.reactionMessage?.text ||
       msg.reaction?.text
     );
+  }
+
+  public getQuotedMessage(msg: WAMessage) {
+    const content = normalizeMessageContent(msg.message);
+    const message = content?.[getContentType(content)] as {
+      contextInfo?: proto.IContextInfo;
+    };
+
+    return normalizeMessageContent(message?.contextInfo?.quotedMessage);
   }
 
   public getMessageParams(messageContent: string, interactionName: string) {
