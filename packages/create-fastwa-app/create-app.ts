@@ -51,8 +51,6 @@ function createPackageJson(appName: string) {
     dependencies: {
       '@fastwa/baileys': fastwa,
       '@whiskeysockets/baileys': BAILEYS_VERSION,
-      'class-transformer': '^0.5.1',
-      'class-validator': '^0.15.1',
       fastwa,
       'qrcode-terminal': '^0.12.0',
       'reflect-metadata': '^0.2.2'
