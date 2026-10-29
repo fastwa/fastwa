@@ -4,16 +4,9 @@
     "outDir": ".",
     "rootDir": ".",
     "paths": {
-      "@fastwa/common": ["../common"],
-      "@fastwa/common/*": ["../common/*"],
       "@fastwa/builders": ["../builders"],
       "@fastwa/builders/*": ["../builders/*"]
     }
   },
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "../common/tsconfig.build.json"
-    }
-  ]
+  "exclude": ["node_modules", "dist"]
 }

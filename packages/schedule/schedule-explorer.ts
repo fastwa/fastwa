@@ -1,5 +1,10 @@
-import { MetadataScanner, FastwaContainer } from '@fastwa/core';
-import { Injectable, OnModuleInit, Type } from '@fastwa/common';
+import {
+  FastwaContainer,
+  Injectable,
+  MetadataScanner,
+  OnModuleInit,
+  Type
+} from 'fastwa';
 
 import { flatten } from './utils';
 import { CRON_OPTIONS } from './constants';

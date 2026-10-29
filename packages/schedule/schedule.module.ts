@@ -1,4 +1,4 @@
-import { Module } from '@fastwa/common';
+import { Module } from 'fastwa';
 
 import { ScheduleService } from './schedule.service';
 import { ScheduleExplorer } from './schedule-explorer';
