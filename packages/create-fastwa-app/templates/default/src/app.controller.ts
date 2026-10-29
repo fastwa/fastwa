@@ -3,7 +3,7 @@ import { Message } from '@fastwa/baileys';
 
 import qrcode from 'qrcode-terminal';
 
-import { AppService } from './app.service.js';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {

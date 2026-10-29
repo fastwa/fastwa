@@ -7,7 +7,7 @@ import {
 import { FastwaFactory } from 'fastwa';
 import { BaileysAdapter } from '@fastwa/baileys';
 
-import { AppModule } from './app.module.js';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const { state, saveCreds } = await useMultiFileAuthState('auth');
