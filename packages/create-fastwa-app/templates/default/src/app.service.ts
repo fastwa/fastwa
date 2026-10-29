@@ -1,4 +1,4 @@
-import { Injectable } from '@fastwa/common';
+import { Injectable } from 'fastwa';
 
 @Injectable()
 export class AppService {

@@ -1,4 +1,4 @@
-import { Command, Controller, Message, On } from '@fastwa/common';
+import { Command, Controller, Message, On } from 'fastwa';
 
 import qrcode from 'qrcode-terminal';
 

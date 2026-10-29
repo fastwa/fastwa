@@ -1,4 +1,4 @@
-import { Module } from '@fastwa/common';
+import { Module } from 'fastwa';
 
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
