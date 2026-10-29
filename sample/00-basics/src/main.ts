@@ -9,7 +9,7 @@ import {
 import { FastwaFactory } from 'fastwa';
 import { BaileysAdapter } from '@fastwa/baileys';
 
-import { AppModule } from './app.module.js';
+import { GreetingModule } from './greeting.module.js';
 
 async function bootstrap() {
   const { state, saveCreds } = await useMultiFileAuthState('auth');
@@ -22,7 +22,7 @@ async function bootstrap() {
     browser: Browsers.macOS('Fastwa Basics')
   });
 
-  const app = await FastwaFactory.create(AppModule, adapter);
+  const app = await FastwaFactory.create(GreetingModule, adapter);
 
   await app.listen();
 }

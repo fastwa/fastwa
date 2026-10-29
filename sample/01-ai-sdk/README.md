@@ -39,21 +39,22 @@ Send any message to the paired account from **another number, in a private chat*
 | An image with the caption `What is in this picture?` | The image is downloaded and sent to the model |
 | A reply to an image with `What is in this picture?` | Same, using the quoted image |
 
-Two guards decide which messages are answered, with `@UseGuards(DMGuard, TextOnlyGuard)`:
+Two guards decide which messages are answered, with `@UseGuards(DMGuard, ContentGuard)`:
 
 - `DMGuard` ignores groups, broadcasts, channels and the bot's own messages. Without the last check the bot would answer its own replies forever, since WhatsApp also delivers the messages you send.
-- `TextOnlyGuard` ignores messages without text: reactions, stickers, audio, and images or videos without a caption.
+- `ContentGuard` ignores messages without text: reactions, stickers, audio, and images or videos without a caption.
 
 ## How it works
 
 | File | Role |
 |---|---|
 | `src/main.ts` | Creates the app with `FastwaFactory` and a `BaileysAdapter` using Baileys' `useMultiFileAuthState` |
+| `src/ai.module.ts` | Declares the controller and the provider |
 | `src/ai.controller.ts` | A catch-all `@Command` that reads the text (or caption) with `@Content()` and the replied-to message with `@Quoted()`, shows the typing indicator, and renders the QR via `@On('connection.update')` |
 | `src/ai.service.ts` | Calls `generateText` with the instructions, tools and Anthropic provider options |
-| `src/tools.ts` | AI SDK tools, created per request so they can act on the current message |
+| `src/ai.tools.ts` | AI SDK tools, created per request so they can act on the current message |
 | `src/dm.guard.ts` | Guard that only lets messages from others in private chats through |
-| `src/text-only.guard.ts` | Guard that only lets messages with text (or a caption) through |
+| `src/content.guard.ts` | Guard that only lets messages with text (or a caption) through |
 
 The model is `claude-opus-5-5` with `effort: 'low'` for fast chat replies. `fallbacks: 'default'` retries on a fallback model in the same call if Claude declines a request.
 

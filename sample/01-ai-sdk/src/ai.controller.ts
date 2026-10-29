@@ -19,9 +19,9 @@ import {
 
 import qrcode from 'qrcode-terminal';
 
-import { AiService } from './ai.service.js';
 import { DMGuard } from './dm.guard.js';
-import { TextOnlyGuard } from './text-only.guard.js';
+import { AiService } from './ai.service.js';
+import { ContentGuard } from './content.guard.js';
 
 // Matches every message; the guards decide which ones are answered
 const ANY_MESSAGE = /^[\s\S]*$/;
@@ -31,7 +31,7 @@ export class AiController {
   @Socket()
   socket: WASocket;
 
-  constructor(private readonly aiService: AiService) {}
+  constructor(private readonly ai: AiService) { }
 
   @On('connection.update')
   onConnectionUpdate({ qr }: { qr?: string }) {
@@ -41,7 +41,7 @@ export class AiController {
   }
 
   @Command(ANY_MESSAGE)
-  @UseGuards(DMGuard, TextOnlyGuard)
+  @UseGuards(DMGuard, ContentGuard)
   async reply(
     @Content() prompt: string,
     @RemoteJid() remoteJid: string,
@@ -54,7 +54,7 @@ export class AiController {
     await this.socket.sendPresenceUpdate('composing', remoteJid);
 
     try {
-      return await this.aiService.ask({
+      return await this.ai.ask({
         prompt,
         image: imageMessage && (await this.downloadImage(imageMessage)),
         socket: this.socket,
