@@ -11,7 +11,7 @@ export function Inject(token?: any): PropertyDecorator | ParameterDecorator {
     const type =
       token || Reflect.getMetadata('design:type', target, propertyKey);
 
-    if (!index) {
+    if (typeof index === 'number') {
       let dependencies =
         Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target) || [];
 
