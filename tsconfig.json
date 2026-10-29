@@ -23,8 +23,8 @@
     "paths": {
       "fastwa": ["./packages/fastwa"],
       "fastwa/*": ["./packages/fastwa/*"],
-      "@fastwa/client": ["./packages/client"],
-      "@fastwa/client/*": ["./packages/client/*"],
+      "@fastwa/baileys": ["./packages/baileys"],
+      "@fastwa/baileys/*": ["./packages/baileys/*"],
       "@fastwa/builders": ["./packages/builders"],
       "@fastwa/builders/*": ["./packages/builders/*"],
       "@fastwa/schedule": ["./packages/schedule"],

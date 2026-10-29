@@ -59,7 +59,7 @@ export class FastwaFactoryStatic {
     options: SocketOptions,
     container: FastwaContainer
   ) {
-    const { SocketAdapter } = loadAdapter(() => require('@fastwa/client'));
+    const { SocketAdapter } = loadAdapter(() => require('@fastwa/baileys'));
     return new SocketAdapter(options, container);
   }
 
