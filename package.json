@@ -18,7 +18,7 @@
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "7.0.0-rc14",
-    "pino": "^8.7.0",
+    "pino": "^9.14.0",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
