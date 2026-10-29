@@ -14,6 +14,7 @@ import {
   AdapterHost,
   FastwaMessage,
   LogLevels,
+  Logger,
   isFunction,
   isString
 } from 'fastwa';
@@ -31,6 +32,9 @@ export class BaileysAdapter extends AbstractAdapter {
   public socket: WASocket;
 
   private host: AdapterHost;
+  private closed = false;
+
+  private readonly logger = new Logger(BaileysAdapter.name);
 
   constructor(private readonly options: BaileysAdapterOptions) {
     super();
@@ -52,6 +56,7 @@ export class BaileysAdapter extends AbstractAdapter {
   }
 
   public async close() {
+    this.closed = true;
     this.socket?.end(undefined);
   }
 
@@ -92,15 +97,22 @@ export class BaileysAdapter extends AbstractAdapter {
       return;
     }
 
+    // Closed on purpose with app.close()
+    if (this.closed) {
+      return;
+    }
+
     const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
 
-    const restartRequired =
-      statusCode === DisconnectReason.loggedOut ||
-      statusCode === DisconnectReason.restartRequired;
-
-    if (restartRequired) {
-      this.connect();
+    // As recommended by Baileys: reconnect unless the session was logged out
+    if (statusCode === DisconnectReason.loggedOut) {
+      this.logger.log(
+        'Logged out from WhatsApp. Delete the auth state and scan the QR code again.'
+      );
+      return;
     }
+
+    this.connect();
   }
 
   private async onMessagesUpsert({
