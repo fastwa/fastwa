@@ -36,7 +36,7 @@ Fastwa is an open source project and an excellent way if you want an easy start.
 
 ### Upgrading to Baileys v7
 Read the official [v7 migration guide](https://baileys.wiki/migration/v7#v7-migration). What changes for Fastwa apps:
-* **LIDs:** `@RemoteJid()` may return a LID (`123@lid`) instead of a phone number JID. Use `@RemoteJidAlt()` to get the other format. `createMessageCollector` accepts either one.
+* **LIDs:** `@RemoteJid()` may return a LID (`123@lid`) instead of a phone number JID. Use `@RemoteJidAlt()` to get the other format. `CollectorService` accepts either one.
 * **Auth state:** custom auth stores must support the `lid-mapping`, `device-list` and `tctoken` keys. `useMultiFileAuthState` already does.
 * **QR code:** Fastwa does not render QR codes, and Baileys deprecated `printQRInTerminal`. Listen to `connection.update` and handle the `qr` field yourself (e.g. with `qrcode-terminal`).
 
