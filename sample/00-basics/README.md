@@ -25,7 +25,7 @@ Send `!hello` to the paired account. The bot answers with a greeting using your 
 
 | File | Role |
 |---|---|
-| `src/main.ts` | Creates the app with `FastwaFactory` and Baileys' `useMultiFileAuthState` |
+| `src/main.ts` | Creates the app with `FastwaFactory` and a `BaileysAdapter` using Baileys' `useMultiFileAuthState` |
 | `src/app.module.ts` | Declares the controller and the provider |
 | `src/app.controller.ts` | The `!hello` command, which reads the sender's name with `@Message('pushName')`, and QR rendering via `@On('connection.update')` |
 | `src/greeting.service.ts` | An `@Injectable()` service, injected into the controller's constructor |

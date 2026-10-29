@@ -1,6 +1,11 @@
 import { isLidUser, isPnUser } from '@whiskeysockets/baileys';
 
-import { CanActivate, ExecutionContext, Injectable } from 'fastwa';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  type FastwaMessage
+} from 'fastwa';
 
 // Only lets through messages received in private chats. Groups, broadcasts
 // and channels are ignored, and so are the bot's own messages, which
@@ -8,7 +13,10 @@ import { CanActivate, ExecutionContext, Injectable } from 'fastwa';
 @Injectable()
 export class DMGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
-    const { remoteJid, fromMe } = context.switchToAdapter().getMessage().key;
-    return !fromMe && !!(isPnUser(remoteJid) || isLidUser(remoteJid));
+    const { chatId, fromMe } = context
+      .switchToAdapter()
+      .getMessage<FastwaMessage>();
+
+    return !fromMe && !!(isPnUser(chatId) || isLidUser(chatId));
   }
 }

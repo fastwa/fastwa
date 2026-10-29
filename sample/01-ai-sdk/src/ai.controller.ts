@@ -7,17 +7,15 @@ import {
   type proto
 } from '@whiskeysockets/baileys';
 
+import { Command, Controller, On, UseGuards } from 'fastwa';
+
 import {
-  Command,
   Content,
-  Controller,
   Message,
-  On,
   Quoted,
   RemoteJid,
-  Socket,
-  UseGuards
-} from 'fastwa';
+  Socket
+} from '@fastwa/baileys';
 
 import qrcode from 'qrcode-terminal';
 

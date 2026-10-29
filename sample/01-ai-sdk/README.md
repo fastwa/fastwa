@@ -48,7 +48,7 @@ Two guards decide which messages are answered, with `@UseGuards(DMGuard, TextOnl
 
 | File | Role |
 |---|---|
-| `src/main.ts` | Creates the app with `FastwaFactory` and Baileys' `useMultiFileAuthState` |
+| `src/main.ts` | Creates the app with `FastwaFactory` and a `BaileysAdapter` using Baileys' `useMultiFileAuthState` |
 | `src/ai.controller.ts` | A catch-all `@Command` that reads the text (or caption) with `@Content()` and the replied-to message with `@Quoted()`, shows the typing indicator, and renders the QR via `@On('connection.update')` |
 | `src/ai.service.ts` | Calls `generateText` with the instructions, tools and Anthropic provider options |
 | `src/tools.ts` | AI SDK tools, created per request so they can act on the current message |
