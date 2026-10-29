@@ -1,3 +1,4 @@
+import { WAMessage } from '@whiskeysockets/baileys';
 import {
   Type,
   Interaction,
@@ -12,6 +13,7 @@ import { ModulesContainer } from './modules-container';
 import { CollectionContainer } from './collection';
 import { ApplicationConfig } from '../application-config';
 import { ModuleCompiler } from './compiler';
+import { CollectorRegistry } from '../collectors/collector-registry';
 
 type ModuleMetatype = Type<any> | DynamicModule;
 
@@ -21,6 +23,7 @@ export class FastwaContainer {
   private readonly modules = new ModulesContainer();
   private readonly collection = new CollectionContainer();
   private readonly moduleCompiler = new ModuleCompiler();
+  private readonly messageCollectors = new CollectorRegistry<WAMessage>();
   private readonly dynamicModulesMetadata = new Map<
     string,
     Partial<DynamicModule>
@@ -54,6 +57,10 @@ export class FastwaContainer {
 
   public getCommands() {
     return this.collection.commands;
+  }
+
+  public getMessageCollectors() {
+    return this.messageCollectors;
   }
 
   public addEvent(name: string, event: Interaction) {
