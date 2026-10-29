@@ -5,7 +5,10 @@ import {
   Logger,
   SELF_DECLARED_DEPS_METADATA
 } from '@fastwa/common';
-import { UnknownDependencyException } from '@fastwa/common/exceptions';
+import {
+  CircularDependencyException,
+  UnknownDependencyException
+} from '@fastwa/common/exceptions';
 
 import { Module } from './module';
 import { FastwaContainer } from './container';
@@ -15,6 +18,8 @@ import { SettlementSignal } from './settlement-signal';
 export class Injector {
   private logger = new Logger(Injector.name);
   private collection = new Map<string, any>();
+  private signals = new Map<Type<any>, SettlementSignal>();
+  private resolving: Type<any>[] = [];
 
   constructor(private readonly container: FastwaContainer) {}
 
@@ -52,24 +57,42 @@ export class Injector {
       return this.collection.get(metatype.name);
     }
 
-    const dependencies = this.getClassDependencies(metatype);
+    if (this.signals.get(metatype)?.isPending) {
+      throw new CircularDependencyException(this.getCycle(metatype));
+    }
 
-    const resolveParam = (param: unknown, index: number) => {
-      const type = this.forwardReference(param);
+    const settlementSignal = new SettlementSignal();
+    this.signals.set(metatype, settlementSignal);
+    this.resolving.push(metatype);
 
-      if (!type) {
-        throw new UnknownDependencyException(metatype.name, index);
-      }
+    try {
+      const dependencies = this.getClassDependencies(metatype);
 
-      return this.resolveInstance(type);
-    };
+      const resolveParam = (param: unknown, index: number) => {
+        const type = this.forwardReference(param);
 
-    const resolvedDependencies = dependencies.map(resolveParam);
-    const instance = new metatype(...resolvedDependencies);
+        if (!type) {
+          throw new UnknownDependencyException(metatype.name, index);
+        }
 
-    this.collection.set(metatype.name, instance);
+        return this.resolveInstance(type);
+      };
 
-    return this.replaceContainer(metatype, instance) as Type<T>;
+      const resolvedDependencies = dependencies.map(resolveParam);
+      const instance = new metatype(...resolvedDependencies);
+
+      this.collection.set(metatype.name, instance);
+      settlementSignal.complete();
+
+      return this.replaceContainer(metatype, instance) as Type<T>;
+    } finally {
+      this.resolving.pop();
+    }
+  }
+
+  private getCycle(metatype: Type<any>) {
+    const start = this.resolving.indexOf(metatype);
+    return [...this.resolving.slice(start), metatype].map(({ name }) => name);
   }
 
   public loadControllers(module: Module) {
@@ -100,15 +123,13 @@ export class Injector {
 
   public loadInstance(target: InstanceOptions) {
     const { metatype, instance } = target;
-    const settlementSignal = this.applySettlementSignal(target);
 
     if (instance) {
-      return settlementSignal.complete();
+      return instance;
     }
 
     target.instance = this.resolveInstance(metatype);
-
-    settlementSignal.complete();
+    target.settlementSignal = this.signals.get(metatype);
 
     return target.instance;
   }
@@ -125,11 +146,5 @@ export class Injector {
     }
 
     return param.forwardRef();
-  }
-  public applySettlementSignal(target: InstanceOptions) {
-    const settlementSignal = new SettlementSignal();
-    target.settlementSignal = settlementSignal;
-
-    return settlementSignal;
   }
 }
