@@ -14,9 +14,13 @@ export class GuardsConsumer {
       return true;
     }
 
+    // Every guard must allow the interaction, evaluated in order
     for (const guard of guards) {
-      const result = guard.canActivate(context);
-      return result;
+      if (await guard.canActivate(context)) {
+        continue;
+      }
+
+      return false;
     }
 
     return true;
