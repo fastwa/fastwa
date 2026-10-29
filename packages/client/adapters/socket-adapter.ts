@@ -3,6 +3,7 @@ import pino from 'pino';
 import makeWASocket, {
   DisconnectReason,
   BaileysEvent,
+  BaileysEventMap,
   WASocket,
   WAMessage
 } from '@whiskeysockets/baileys';
@@ -136,8 +137,22 @@ export class SocketAdapter extends AbstractSocketAdapter {
     }
   }
 
-  private async handleMessages({ messages }) {
+  private async handleMessages({
+    messages,
+    type
+  }: BaileysEventMap['messages.upsert']) {
+    const collectors = this.container.getMessageCollectors();
+    const claimed =
+      type === 'notify'
+        ? messages.filter((message) => collectors.dispatch(message))
+        : [];
+
     const msg = messages[0];
+
+    if (claimed.includes(msg)) {
+      return;
+    }
+
     const messageContent = this.interactionFactory.getMessageContent(msg);
 
     const interaction = this.interactionFactory.getInteraction(
