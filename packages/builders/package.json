@@ -4,6 +4,12 @@
   "description": "Lightweight and powerfull framework (@builders)",
   "author": "Natan Rodrigues",
   "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "**/*.js",
+    "**/*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/fastwa/fastwa"

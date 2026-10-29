@@ -12,6 +12,12 @@
   "keywords": [],
   "author": "Natan Rodrigues",
   "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "**/*.js",
+    "**/*.d.ts"
+  ],
   "dependencies": {
     "cron": "^2.1.0",
     "tslib": "2.4.1"
