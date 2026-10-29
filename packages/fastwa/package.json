@@ -45,6 +45,14 @@
     "class-validator": "*",
     "reflect-metadata": "^0.1.13 || ^0.2.0"
   },
+  "peerDependenciesMeta": {
+    "class-transformer": {
+      "optional": true
+    },
+    "class-validator": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20.19.0"
   }
