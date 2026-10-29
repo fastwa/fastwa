@@ -1,19 +1,37 @@
 {
   "name": "@fastwa/baileys",
   "version": "1.1.0",
-  "description": "Lightweight and powerfull framework (@client)",
-  "author": "Natan Rodrigues",
+  "description": "Baileys adapter for fastwa",
+  "keywords": [
+    "fastwa",
+    "whatsapp",
+    "chatbot",
+    "baileys"
+  ],
+  "homepage": "https://fastwa.org",
+  "bugs": {
+    "url": "https://github.com/fastwa/fastwa/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastwa/fastwa.git",
+    "directory": "packages/baileys"
+  },
   "license": "MIT",
+  "author": "Natan Rodrigues",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "**/*.js",
     "**/*.d.ts"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fastwa/fastwa"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -26,7 +44,6 @@
     "fastwa": "^1.0.0",
     "@whiskeysockets/baileys": "^7.0.0-rc14"
   },
-  "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d",
   "engines": {
     "node": ">=20.19.0"
   }

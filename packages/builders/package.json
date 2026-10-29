@@ -1,19 +1,37 @@
 {
   "name": "@fastwa/builders",
   "version": "1.1.0",
-  "description": "Lightweight and powerfull framework (@builders)",
-  "author": "Natan Rodrigues",
+  "description": "Message builders for fastwa: stickers, contacts and text formatting",
+  "keywords": [
+    "fastwa",
+    "whatsapp",
+    "sticker",
+    "vcard"
+  ],
+  "homepage": "https://fastwa.org",
+  "bugs": {
+    "url": "https://github.com/fastwa/fastwa/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastwa/fastwa.git",
+    "directory": "packages/builders"
+  },
   "license": "MIT",
+  "author": "Natan Rodrigues",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "**/*.js",
     "**/*.d.ts"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fastwa/fastwa"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -22,11 +40,10 @@
     "sharp": "^0.35.5",
     "tslib": "2.4.1"
   },
-  "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d",
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "peerDependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc14"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

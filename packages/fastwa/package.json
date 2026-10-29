@@ -2,18 +2,37 @@
   "name": "fastwa",
   "version": "1.1.0",
   "description": "Framework for building WhatsApp chatbots with modules, controllers and dependency injection",
-  "author": "Natan Rodrigues",
+  "keywords": [
+    "fastwa",
+    "whatsapp",
+    "chatbot",
+    "framework",
+    "dependency-injection"
+  ],
+  "homepage": "https://fastwa.org",
+  "bugs": {
+    "url": "https://github.com/fastwa/fastwa/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastwa/fastwa.git",
+    "directory": "packages/fastwa"
+  },
   "license": "MIT",
+  "author": "Natan Rodrigues",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "**/*.js",
     "**/*.d.ts"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fastwa/fastwa"
-  },
   "publishConfig": {
     "access": "public"
   },
