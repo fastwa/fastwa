@@ -182,6 +182,7 @@ With Baileys 7, the chat JID (`@RemoteJid()`) may be a LID (`123@lid`) instead o
 
 ## Other behavior changes
 
+- `BaileysAdapter` reconnects after any disconnection except a logout, as Baileys recommends. In 1.x it reconnected only when a restart was required, and also after a logout.
 - Only messages received while connected (`messages.upsert` with type `notify`) trigger commands; messages from history sync no longer do.
 - Messages without text, e.g. stickers or media without a caption, no longer match commands.
 - Commands without named params (e.g. `!help`) no longer crash.
