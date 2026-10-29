@@ -20,6 +20,7 @@ export class Injector {
   private collection = new Map<string, any>();
   private signals = new Map<Type<any>, SettlementSignal>();
   private resolving: Type<any>[] = [];
+  private placeholders = new Map<Type<any>, any>();
 
   constructor(private readonly container: FastwaContainer) {}
 
@@ -75,11 +76,23 @@ export class Injector {
           throw new UnknownDependencyException(metatype.name, index);
         }
 
+        // Closes a forwardRef cycle: the class is still being resolved, so it
+        // gets a placeholder that becomes the real instance once constructed
+        if (
+          this.isForwardReference(param) &&
+          this.signals.get(type)?.isPending
+        ) {
+          return this.getPlaceholder(type);
+        }
+
         return this.resolveInstance(type);
       };
 
       const resolvedDependencies = dependencies.map(resolveParam);
-      const instance = new metatype(...resolvedDependencies);
+      const created = new metatype(...resolvedDependencies);
+      const instance = this.placeholders.has(metatype)
+        ? Object.assign(this.placeholders.get(metatype), created)
+        : created;
 
       this.collection.set(metatype.name, instance);
       settlementSignal.complete();
@@ -88,6 +101,14 @@ export class Injector {
     } finally {
       this.resolving.pop();
     }
+  }
+
+  private getPlaceholder(metatype: Type<any>) {
+    if (!this.placeholders.has(metatype)) {
+      this.placeholders.set(metatype, Object.create(metatype.prototype));
+    }
+
+    return this.placeholders.get(metatype);
   }
 
   private getCycle(metatype: Type<any>) {
@@ -140,8 +161,12 @@ export class Injector {
       : instance;
   }
 
+  private isForwardReference(param: any) {
+    return !!param?.forwardRef;
+  }
+
   private forwardReference(param: Type<any> | any) {
-    if (!param?.forwardRef) {
+    if (!this.isForwardReference(param)) {
       return param;
     }
 
