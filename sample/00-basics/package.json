@@ -14,11 +14,10 @@
     "dev": "tsc && npm start"
   },
   "dependencies": {
+    "@fastwa/baileys": "file:../../packages/baileys",
     "@fastwa/builders": "file:../../packages/builders",
-    "@fastwa/client": "file:../../packages/client",
-    "@fastwa/common": "file:../../packages/common",
-    "@fastwa/core": "file:../../packages/core",
     "@whiskeysockets/baileys": "7.0.0-rc14",
+    "fastwa": "file:../../packages/fastwa",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13"
   },

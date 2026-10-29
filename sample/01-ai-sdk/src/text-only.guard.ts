@@ -1,6 +1,6 @@
 import { normalizeMessageContent } from '@whiskeysockets/baileys';
 
-import { CanActivate, ExecutionContext, Injectable } from '@fastwa/common';
+import { CanActivate, ExecutionContext, Injectable } from 'fastwa';
 
 // Only lets through messages that carry text: plain text, replies and media
 // captions. Reactions, stickers, audio and media without a caption are ignored.
