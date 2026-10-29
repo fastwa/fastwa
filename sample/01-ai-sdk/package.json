@@ -1,0 +1,33 @@
+{
+  "name": "fastwa-sample-ai-sdk",
+  "version": "1.0.0",
+  "description": "Fastwa sample: WhatsApp assistant powered by the Vercel AI SDK and Claude",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --env-file-if-exists=.env dist/main.js",
+    "dev": "tsc && npm start"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.91",
+    "@fastwa/builders": "file:../../packages/builders",
+    "@fastwa/client": "file:../../packages/client",
+    "@fastwa/common": "file:../../packages/common",
+    "@fastwa/core": "file:../../packages/core",
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "ai": "^7.0.156",
+    "qrcode-terminal": "^0.12.0",
+    "reflect-metadata": "^0.1.13",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/qrcode-terminal": "^0.12.2",
+    "typescript": "^5.5.4"
+  }
+}
