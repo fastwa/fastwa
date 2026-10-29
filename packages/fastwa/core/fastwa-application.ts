@@ -1,32 +1,29 @@
-import {
-  MESSAGES,
-  FastwaContainer,
-  InteractionExplorer,
-  callModuleBootstrapHook,
-  callModuleInitHook,
-  AbstractSocketAdapter
-} from './';
+import { IFastwaApplication, Logger, PipeTransform } from '../common';
 
-import { Logger } from '../common';
+import { AbstractAdapter } from './adapters';
 import { ApplicationConfig } from './application-config';
+import { MESSAGES } from './helpers';
+import { callModuleBootstrapHook, callModuleInitHook } from './hooks';
+import { FastwaContainer } from './injector';
+import { InteractionDispatcher, InteractionExplorer } from './interaction';
 
-export class FastwaApplication {
+export class FastwaApplication implements IFastwaApplication {
   private config: ApplicationConfig;
-  private socketRef: AbstractSocketAdapter;
-  private InteractionExplorer: InteractionExplorer;
+  private adapter: AbstractAdapter;
+  private interactionExplorer: InteractionExplorer;
 
   private readonly logger = new Logger(FastwaApplication.name);
 
   constructor(private readonly container: FastwaContainer) {
     this.config = this.container.applicationConfig;
-    this.socketRef = this.container.getSocketRef();
+    this.adapter = this.container.getAdapter();
 
-    this.InteractionExplorer = new InteractionExplorer(this.container);
+    this.interactionExplorer = new InteractionExplorer(this.container);
   }
 
   public async listen() {
-    this.InteractionExplorer.explore();
-    this.socketRef.listen();
+    this.interactionExplorer.explore();
+    await this.adapter.listen(new InteractionDispatcher(this.container));
 
     await this.callInitHook();
     await this.callBootstrapHook();
@@ -36,12 +33,11 @@ export class FastwaApplication {
     return this;
   }
 
-  public async useSaveCreds(saveCreds: () => Promise<any>) {
-    this.socketRef.useSaveCreds(saveCreds);
-    return this;
+  public async close() {
+    await this.adapter.close();
   }
 
-  public useGlobalPipes(...pipes: any[]) {
+  public useGlobalPipes(...pipes: PipeTransform[]) {
     this.config.useGlobalPipes(...pipes);
     return this;
   }

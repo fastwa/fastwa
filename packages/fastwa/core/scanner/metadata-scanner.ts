@@ -2,7 +2,7 @@ import {
   isConstructor,
   isFunction,
   Type,
-  SOCKET_METADATA
+  ADAPTER_PROPERTY_METADATA
 } from '../../common';
 
 export class MetadataScanner {
@@ -15,12 +15,18 @@ export class MetadataScanner {
       .map(callback);
   }
 
-  public *scanServerHooks(instance: Type<object>) {
+  public *scanAdapterProperties(
+    instance: Type<object>
+  ): Generator<[string, (adapter: unknown) => unknown]> {
     for (const property in instance) {
       const key = String(property);
-      const isSocket = Reflect.getMetadata(SOCKET_METADATA, instance, key);
+      const resolve = Reflect.getMetadata(
+        ADAPTER_PROPERTY_METADATA,
+        instance,
+        key
+      );
 
-      if (isSocket) yield key;
+      if (resolve) yield [key, resolve];
     }
   }
 }

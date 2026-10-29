@@ -1,3 +1,3 @@
 export * from './command.decorator';
-export * from './socket.decorator';
+export * from './adapter-property.decorator';
 export * from './interaction-params.decorator';

@@ -2,6 +2,6 @@ import { PipeTransform } from './features';
 
 export interface IFastwaApplication {
   listen(): Promise<any>;
-  useSaveCreds(saveCreds: () => Promise<any>): IFastwaApplication;
+  close(): Promise<void>;
   useGlobalPipes(...pipes: PipeTransform[]): IFastwaApplication;
 }

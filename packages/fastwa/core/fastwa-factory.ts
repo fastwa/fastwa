@@ -1,8 +1,11 @@
-import { Logger, SocketOptions, IFastwaApplication } from '../common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-import { AbstractSocketAdapter } from './adapters';
+import { Logger, IFastwaApplication } from '../common';
+
+import { AbstractAdapter } from './adapters';
 import { Injector, FastwaContainer } from './injector';
-import { loadAdapter, MESSAGES } from './helpers';
+import { MESSAGES } from './helpers';
 
 import { FastwaApplication } from './fastwa-application';
 import { DependenciesScanner, MetadataScanner } from './scanner';
@@ -13,32 +16,27 @@ export class FastwaFactoryStatic {
 
   /**
    * Creates an instance of the FastwaApplication.
-   * 
+   *
    * @param module Entry application module class
-   * @param options Options to initalize the socket adapter
-
+   * @param adapter Adapter that connects the application to a platform,
+   * e.g. `new BaileysAdapter(options)` from `@fastwa/baileys`
+   *
    * @returns A promise that resolves to an application instance
    */
-  async create<T extends IFastwaApplication>(
+  async create<T extends IFastwaApplication = FastwaApplication>(
     module: any,
-    options: SocketOptions
+    adapter: AbstractAdapter
   ): Promise<T> {
     const applicationConfig = new ApplicationConfig();
     const container = new FastwaContainer(applicationConfig);
 
-    const socket = this.createSocketAdapter(options, container);
-
-    await this.initialize(module, container, socket, options.version);
+    container.setAdapter(adapter);
+    await this.initialize(module, container);
 
     return this.createFastwaInstance<T>(container);
   }
 
-  async initialize(
-    module: any,
-    container: FastwaContainer,
-    socket: AbstractSocketAdapter,
-    version?: number[]
-  ) {
+  async initialize(module: any, container: FastwaContainer) {
     const injector = new Injector(container);
     const metadataScanner = new MetadataScanner();
     const dependenciesScanner = new DependenciesScanner(
@@ -46,21 +44,15 @@ export class FastwaFactoryStatic {
       metadataScanner
     );
 
-    const release = version.join('.');
-    this.logger.log(MESSAGES.APPLICATION_START(release));
+    this.logger.log(MESSAGES.APPLICATION_START(this.getVersion()));
 
     await dependenciesScanner.scan(module);
     injector.createInstancesOfDependencies();
-
-    container.setSocketAdapter(socket);
-    socket.initializeSocket();
   }
-  private createSocketAdapter(
-    options: SocketOptions,
-    container: FastwaContainer
-  ) {
-    const { SocketAdapter } = loadAdapter(() => require('@fastwa/baileys'));
-    return new SocketAdapter(options, container);
+
+  private getVersion(): string {
+    const pkg = readFileSync(join(__dirname, '..', 'package.json'), 'utf8');
+    return JSON.parse(pkg).version;
   }
 
   private createFastwaInstance<T>(container: FastwaContainer): T {
