@@ -21,7 +21,8 @@
   "peerDependencies": {
     "@fastwa/client": "^1.0.0",
     "@fastwa/common": "^1.0.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "@whiskeysockets/baileys": "^7.0.0-rc14"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d",
   "engines": {
