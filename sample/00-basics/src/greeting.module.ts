@@ -1,10 +1,10 @@
 import { Module } from 'fastwa';
 
-import { AppController } from './app.controller.js';
+import { GreetingController } from './greeting.controller.js';
 import { GreetingService } from './greeting.service.js';
 
 @Module({
-  controllers: [AppController],
+  controllers: [GreetingController],
   providers: [GreetingService]
 })
-export class AppModule {}
+export class GreetingModule { }

@@ -8,11 +8,11 @@ import qrcode from 'qrcode-terminal';
 import { GreetingService } from './greeting.service.js';
 
 @Controller()
-export class AppController {
+export class GreetingController {
   @Socket()
   socket: WASocket;
 
-  constructor(private readonly greetingService: GreetingService) {}
+  constructor(private readonly greeting: GreetingService) { }
 
   @On('connection.update')
   onConnectionUpdate({ qr }: { qr?: string }) {
@@ -21,8 +21,8 @@ export class AppController {
     }
   }
 
-  @Command('!hello')
+  @Command('hello')
   hello(@Message('pushName') name: string | undefined) {
-    return this.greetingService.greet(name ?? 'there');
+    return this.greeting.greet(name ?? 'there');
   }
 }

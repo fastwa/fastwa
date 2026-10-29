@@ -9,20 +9,18 @@ import {
 import { FastwaFactory } from 'fastwa';
 import { BaileysAdapter } from '@fastwa/baileys';
 
-import { AppModule } from './app.module.js';
+import { AIModule } from './ai.module.js';
 
 async function bootstrap() {
-  const { state, saveCreds } = await useMultiFileAuthState('auth');
   const { version } = await fetchLatestBaileysVersion();
+  const { state, saveCreds } = await useMultiFileAuthState('auth');
 
-  const adapter = new BaileysAdapter({
+  const app = await FastwaFactory.create(AIModule, new BaileysAdapter({
     auth: state,
     saveCreds,
     version,
     browser: Browsers.macOS('Fastwa AI SDK')
-  });
-
-  const app = await FastwaFactory.create(AppModule, adapter);
+  }));
 
   await app.listen();
 }

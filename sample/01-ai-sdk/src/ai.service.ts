@@ -1,10 +1,10 @@
-import { anthropic, type AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { generateText, stepCountIs, type UserContent } from 'ai';
+import { anthropic, type AnthropicProviderOptions } from '@ai-sdk/anthropic';
 
 import { Injectable } from 'fastwa';
 import type { WAMessage, WASocket } from '@whiskeysockets/baileys';
 
-import { createTools } from './tools.js';
+import { createTools } from './ai.tools.js';
 
 const INSTRUCTIONS = `You are a helpful assistant answering messages on WhatsApp.
 Keep answers short and conversational. Use WhatsApp formatting only:

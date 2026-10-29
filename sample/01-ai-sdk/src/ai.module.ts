@@ -7,4 +7,4 @@ import { AiService } from './ai.service.js';
   controllers: [AiController],
   providers: [AiService]
 })
-export class AppModule {}
+export class AIModule { }
