@@ -1,8 +1,7 @@
-import { WAMessage } from '@whiskeysockets/baileys';
-
 import {
   CanActivate,
   createNullArray,
+  FastwaMessage,
   Interaction,
   MESSAGE_ARGS_METADATA,
   PARAMTYPES_METADATA,
@@ -17,8 +16,8 @@ import { GuardsConsumer, GuardsContext } from '../guards';
 
 interface ParamsMetadata {
   index: number;
-  extractValue: (msg: WAMessage) => any;
-  data: string;
+  extractValue: (msg: FastwaMessage) => any;
+  data: any;
   metatype?: any;
 }
 
@@ -77,12 +76,12 @@ export class InteractionProxy {
     const fnApplyPipes = this.createPipesFn(pipes, paramsOptions);
     const fnCanActivate = this.createGuardsFn(guards, instance, callback);
 
-    const handler = async (args: any[], msg: WAMessage) => {
+    const handler = async (args: any[], msg: FastwaMessage) => {
       fnApplyPipes && (await fnApplyPipes(args, msg));
       return callback.apply(instance, args);
     };
 
-    return async (msg: WAMessage) => {
+    return async (msg: FastwaMessage) => {
       const args = createNullArray(argsLength);
       const canActivate = await fnCanActivate(msg);
 
@@ -129,15 +128,16 @@ export class InteractionProxy {
     interactionName: string
   ) {
     return keys.map((key) => {
-      const { index, data } = metadata[key];
+      const { index, data, factory } = metadata[key];
       const paramType = this.interactionFactory.getParamType(key);
 
-      const extractValue = (msg: WAMessage) =>
+      const extractValue = (msg: FastwaMessage) =>
         this.interactionFactory.paramForValue(
           paramType,
           data,
           msg,
-          interactionName
+          interactionName,
+          factory
         );
 
       return {
@@ -153,7 +153,7 @@ export class InteractionProxy {
     pipes: PipeTransform[],
     paramsOptions: ParamsMetadata[]
   ) {
-    const pipesFn = async (args: any[], msg: WAMessage) => {
+    const pipesFn = async (args: any[], msg: FastwaMessage) => {
       const resolveParam = async (paramsMetadata: ParamsMetadata) => {
         const { index, metatype, data, extractValue } = paramsMetadata;
         const value = extractValue(msg);
@@ -176,7 +176,7 @@ export class InteractionProxy {
     instance: object,
     callback: (...args: any[]) => any
   ) {
-    const fnCanActivate = async (msg: WAMessage) => {
+    const fnCanActivate = async (msg: FastwaMessage) => {
       const canActivate = await this.guardsConsumer.tryActivate(
         guards,
         [msg, this.container.getAdapter()],

@@ -5,13 +5,14 @@ import makeWASocket, {
   BaileysEvent,
   BaileysEventMap,
   DisconnectReason,
-  WAMessage,
+  WAMessageKey,
   WASocket
 } from '@whiskeysockets/baileys';
 
 import {
   AbstractAdapter,
   AdapterHost,
+  FastwaMessage,
   LogLevels,
   ReactionMessage,
   SocketConnectionState,
@@ -22,6 +23,8 @@ import {
 } from 'fastwa';
 
 import { Boom } from '@hapi/boom';
+
+import { toFastwaMessage, toFastwaReaction } from '../helpers';
 
 export class BaileysAdapter extends AbstractAdapter {
   /**
@@ -40,9 +43,12 @@ export class BaileysAdapter extends AbstractAdapter {
     this.connect();
   }
 
-  public async reply(message: WAMessage, response: unknown) {
+  public async reply(
+    message: FastwaMessage<{ key: WAMessageKey }>,
+    response: unknown
+  ) {
     return this.socket.sendMessage(
-      message.key.remoteJid,
+      message.raw.key.remoteJid,
       this.toMessageContent(response)
     );
   }
@@ -109,13 +115,17 @@ export class BaileysAdapter extends AbstractAdapter {
     }
 
     for (const message of messages) {
-      await this.host.handleMessage(message);
+      await this.host.handleMessage(
+        toFastwaMessage(message, this.socket.user?.id)
+      );
     }
   }
 
   private async onReactions(reactions: ReactionMessage[]) {
     for (const reaction of reactions) {
-      await this.host.handleReaction(reaction);
+      await this.host.handleReaction(
+        toFastwaReaction(reaction, this.socket.user?.id)
+      );
     }
   }
 

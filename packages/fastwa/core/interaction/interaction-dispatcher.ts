@@ -1,4 +1,4 @@
-import { Interaction } from '../../common';
+import { FastwaMessage, Interaction } from '../../common';
 
 import { AdapterHost } from '../adapters';
 import { FastwaContainer } from '../injector/container';
@@ -28,14 +28,14 @@ export class InteractionDispatcher implements AdapterHost {
     return [...this.container.getEvents().keys()];
   }
 
-  public async handleMessage(message: any) {
+  public async handleMessage(message: FastwaMessage) {
     // An exclusive collector owns the chat, so commands are not triggered
     if (this.container.getMessageCollectors().dispatch(message)) {
       return;
     }
 
     const interaction = this.interactionFactory.getInteraction(
-      this.interactionFactory.getMessageContent(message),
+      message.text,
       this.container.getCommands()
     );
 
@@ -44,10 +44,10 @@ export class InteractionDispatcher implements AdapterHost {
     }
   }
 
-  public async handleReaction(reaction: any) {
+  public async handleReaction(reaction: FastwaMessage) {
     const interaction = this.container
       .getReactions()
-      .get(reaction.reaction.text);
+      .get(reaction.reaction?.emoji);
 
     if (interaction) {
       await this.handleInteraction(reaction, interaction);
@@ -59,7 +59,10 @@ export class InteractionDispatcher implements AdapterHost {
     await interaction?.callback.call(interaction.instance, payload);
   }
 
-  private async handleInteraction(message: any, interaction: Interaction) {
+  private async handleInteraction(
+    message: FastwaMessage,
+    interaction: Interaction
+  ) {
     const handler = this.interactionProxy.createProxy(interaction);
     const response = await handler(message);
 

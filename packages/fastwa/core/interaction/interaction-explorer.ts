@@ -94,9 +94,7 @@ export class InteractionExplorer {
     });
   }
 
-  public bindAdapterProperties(
-    controllers: Map<IController, InstanceOptions>
-  ) {
+  public bindAdapterProperties(controllers: Map<IController, InstanceOptions>) {
     const adapter = this.container.getAdapter();
 
     controllers.forEach(({ instance }) => {

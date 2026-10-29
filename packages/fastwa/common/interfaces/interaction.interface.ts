@@ -1,9 +1,9 @@
 import { Type } from './type.interface';
 import { InteractionType } from '../enums';
-import { BaileysEvent, proto } from '@whiskeysockets/baileys';
+import { BaileysEvent, WAMessageKey, proto } from '@whiskeysockets/baileys';
 
 export interface ReactionMessage {
-  key: proto.IMessageKey;
+  key: WAMessageKey;
   reaction: proto.IReaction;
 }
 

@@ -1,6 +1,7 @@
 export * from './type.interface';
 export * from './instance.interface';
 export * from './interaction.interface';
+export * from './message.interface';
 
 export * from './socket-options.interface';
 export * from './fastwa-application.interface';
