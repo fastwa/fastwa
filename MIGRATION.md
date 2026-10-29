@@ -159,6 +159,16 @@ export class AppController {
 - `create()` returns a collector with `collect` and `end` events, and the `filter`, `time`, `idle`, `max` and `exclusive` options. While an `exclusive` collector is active, messages from its chat do not trigger commands.
 - Collectors take the chat JID (e.g. from `@RemoteJid()`) and match either format, LID or phone number.
 
+## Validation
+
+`class-validator` and `class-transformer` are optional peer dependencies, loaded only when a `ValidationPipe` is created. Apps that use it install both:
+
+```bash
+npm install class-validator class-transformer
+```
+
+Without them, `new ValidationPipe()` throws an error naming the missing package.
+
 ## Dependency injection
 
 - Circular dependencies fail with a `CircularDependencyException` that shows the cycle. Declare intentional cycles with `forwardRef()`.

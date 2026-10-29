@@ -49,7 +49,7 @@ The design deliberately mirrors NestJS: modules, controllers, providers, decorat
 
 **Collectors:** `CollectorModule` / `CollectorService` (`core/collectors`) wait for messages in a chat (`awaitMessage`, `awaitMessages`, `create`), matching `chatId` or `chatIdAlt`.
 
-**Validation:** `ValidationPipe` uses `class-validator` and `class-transformer`, peer dependencies of `fastwa`.
+**Validation:** `ValidationPipe` loads `class-validator` and `class-transformer` with `loadPackage()` when it is created; both are optional peer dependencies.
 
 ## Samples
 
