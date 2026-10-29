@@ -30,6 +30,8 @@
     "@types/ws": "^8.5.9",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.2",
