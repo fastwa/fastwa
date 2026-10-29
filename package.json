@@ -11,7 +11,7 @@
   },
   "scripts": {
     "format": "prettier '**/*.ts' --ignore-path .prettierignore --write",
-    "prebuild": "node scripts/clean.js",
+    "prebuild": "node scripts/clean.js && node scripts/check-fastwa-imports.js",
     "start:dev": "ts-node-dev --ignore-watch node_modules --respawn --rs sample/01-stickers/src/main.ts",
     "build": "tsc -b -v packages",
     "publish": "npm run prebuild && npm run build && lerna publish --force-publish --exact -m \"chore(@fastwa) publish %s release\""
