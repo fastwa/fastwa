@@ -18,14 +18,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.0",
-    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "pino": "^9.14.0",
     "tslib": "2.4.1"
   },
   "peerDependencies": {
     "@fastwa/common": "^1.0.0",
-    "@fastwa/core": "^1.0.0"
+    "@fastwa/core": "^1.0.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc14"
   },
   "gitHead": "c39c32c92088e6c363df359d9df9c74feebbaf1d",
   "engines": {
