@@ -1,7 +1,8 @@
 {
-  "name": "@fastwa/core",
+  "name": "fastwa-project",
+  "private": true,
   "author": "Natan Rodrigues",
-  "description": "Lightweight and powerfull framework",
+  "description": "Fastwa monorepo",
   "license": "MIT",
   "version": "1.0.1",
   "repository": {
