@@ -1,4 +1,4 @@
-import { WAMessage } from '@whiskeysockets/baileys';
+import { WAMessage, normalizeMessageContent } from '@whiskeysockets/baileys';
 
 import {
   Interaction,
@@ -59,12 +59,16 @@ export class InteractionFactory {
   }
 
   public getMessageContent(msg: any) {
+    // Unwraps ephemeral, view-once, edited and document-with-caption messages
+    const content = normalizeMessageContent(msg.message);
+
     return (
-      msg.message?.conversation ||
-      msg.message?.extendedTextMessage?.text ||
-      msg.message?.ephemeralMessage?.message?.conversation ||
-      msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text ||
-      msg.message?.reactionMessage?.text ||
+      content?.conversation ||
+      content?.extendedTextMessage?.text ||
+      content?.imageMessage?.caption ||
+      content?.videoMessage?.caption ||
+      content?.documentMessage?.caption ||
+      content?.reactionMessage?.text ||
       msg.reaction?.text
     );
   }
