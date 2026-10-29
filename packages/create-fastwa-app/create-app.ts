@@ -40,7 +40,6 @@ function createPackageJson(appName: string) {
     name: appName,
     version: '0.1.0',
     private: true,
-    type: 'module',
     engines: {
       node: '>=20.19.0'
     },
