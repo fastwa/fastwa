@@ -1,0 +1,31 @@
+{
+  "name": "create-fastwa-app",
+  "version": "1.1.0",
+  "description": "Create Fastwa apps with one command",
+  "author": "Natan Rodrigues",
+  "license": "MIT",
+  "keywords": [
+    "fastwa",
+    "whatsapp",
+    "chatbot",
+    "baileys"
+  ],
+  "bin": {
+    "create-fastwa-app": "index.js"
+  },
+  "files": [
+    "**/*.js",
+    "templates"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwa/fastwa",
+    "directory": "packages/create-fastwa-app"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
