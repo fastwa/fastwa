@@ -46,18 +46,14 @@ export class FastwaFactoryStatic {
       metadataScanner
     );
 
-    try {
-      const release = version.join('.');
-      this.logger.log(MESSAGES.APPLICATION_START(release));
+    const release = version.join('.');
+    this.logger.log(MESSAGES.APPLICATION_START(release));
 
-      await dependenciesScanner.scan(module);
-      injector.createInstancesOfDependencies();
+    await dependenciesScanner.scan(module);
+    injector.createInstancesOfDependencies();
 
-      container.setSocketAdapter(socket);
-      socket.initializeSocket();
-    } catch (e) {
-      process.abort();
-    }
+    container.setSocketAdapter(socket);
+    socket.initializeSocket();
   }
   private createSocketAdapter(
     options: SocketOptions,
