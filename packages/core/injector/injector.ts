@@ -5,6 +5,7 @@ import {
   Logger,
   SELF_DECLARED_DEPS_METADATA
 } from '@fastwa/common';
+import { UnknownDependencyException } from '@fastwa/common/exceptions';
 
 import { Module } from './module';
 import { FastwaContainer } from './container';
@@ -55,6 +56,11 @@ export class Injector {
 
     const resolveParam = (param: unknown, index: number) => {
       const type = this.forwardReference(param);
+
+      if (!type) {
+        throw new UnknownDependencyException(metatype.name, index);
+      }
+
       return this.resolveInstance(type);
     };
 
@@ -114,7 +120,7 @@ export class Injector {
   }
 
   private forwardReference(param: Type<any> | any) {
-    if (!param.forwardRef) {
+    if (!param?.forwardRef) {
       return param;
     }
 
