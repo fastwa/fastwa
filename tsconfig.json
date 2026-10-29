@@ -21,10 +21,8 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
-      "@fastwa/common": ["./packages/common"],
-      "@fastwa/common/*": ["./packages/common/*"],
-      "@fastwa/core": ["./packages/core"],
-      "@fastwa/core/*": ["./packages/core/*"],
+      "fastwa": ["./packages/fastwa"],
+      "fastwa/*": ["./packages/fastwa/*"],
       "@fastwa/client": ["./packages/client"],
       "@fastwa/client/*": ["./packages/client/*"],
       "@fastwa/builders": ["./packages/builders"],

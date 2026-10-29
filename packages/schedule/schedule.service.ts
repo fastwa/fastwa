@@ -1,7 +1,7 @@
 import { CronJob } from 'cron';
 import { randomUUID } from 'crypto';
 
-import { Injectable, OnBootstrap, Type } from '@fastwa/common';
+import { Injectable, OnBootstrap, Type } from 'fastwa';
 
 @Injectable()
 export class ScheduleService implements OnBootstrap {

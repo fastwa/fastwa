@@ -14,22 +14,18 @@ import {
   LogLevels,
   Interaction,
   SocketConnectionState,
-  ReactionMessage
-} from '@fastwa/common';
-
-import {
+  ReactionMessage,
   InteractionFactory,
   FastwaContainer,
   InteractionProxy,
   MessageResponseController,
-  AbstractSocketAdapter
-} from '@fastwa/core';
+  AbstractSocketAdapter,
+  PipesConsumer,
+  GuardsConsumer,
+  GuardsContext
+} from 'fastwa';
 
 import { Boom } from '@hapi/boom';
-
-import { PipesConsumer } from '@fastwa/core/pipes';
-import { GuardsConsumer, GuardsContext } from '@fastwa/core/guards';
-import { ValidationException } from '@fastwa/common/exceptions';
 
 export class SocketAdapter extends AbstractSocketAdapter {
   socket: WASocket;
