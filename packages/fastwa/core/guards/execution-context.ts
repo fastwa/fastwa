@@ -22,7 +22,7 @@ export class ExecutionContextAdapter {
   switchToAdapter(): ArgumentsAdapter {
     return Object.assign(this, {
       getMessage: () => this.getArgByIndex(0),
-      getSocket: () => this.getArgByIndex(1)
+      getAdapter: () => this.getArgByIndex(1)
     });
   }
 }

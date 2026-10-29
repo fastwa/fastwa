@@ -177,11 +177,9 @@ export class InteractionProxy {
     callback: (...args: any[]) => any
   ) {
     const fnCanActivate = async (msg: WAMessage) => {
-      const socketRef = this.container.getSocketRef();
-
       const canActivate = await this.guardsConsumer.tryActivate(
         guards,
-        [msg, socketRef.socket],
+        [msg, this.container.getAdapter()],
         instance,
         callback
       );

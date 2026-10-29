@@ -8,7 +8,7 @@ import {
 } from '../../common';
 
 import { Module } from './module';
-import { AbstractSocketAdapter } from '../adapters';
+import { AbstractAdapter } from '../adapters/abstract-adapter';
 import { ModulesContainer } from './modules-container';
 import { CollectionContainer } from './collection';
 import { ApplicationConfig } from '../application-config';
@@ -19,7 +19,7 @@ type ModuleMetatype = Type<any> | DynamicModule;
 
 export class FastwaContainer {
   public lastTimestampAt = Date.now();
-  private socketAdapter: AbstractSocketAdapter;
+  private adapter: AbstractAdapter;
   private readonly modules = new ModulesContainer();
   private readonly collection = new CollectionContainer();
   private readonly moduleCompiler = new ModuleCompiler();
@@ -35,12 +35,12 @@ export class FastwaContainer {
     return this._applicationConfig;
   }
 
-  public setSocketAdapter(socket: any) {
-    this.socketAdapter = socket;
+  public setAdapter(adapter: AbstractAdapter) {
+    this.adapter = adapter;
   }
 
-  public getSocketRef() {
-    return this.socketAdapter;
+  public getAdapter() {
+    return this.adapter;
   }
 
   public getModules() {

@@ -1,8 +1,6 @@
-import { WAMessage, WASocket } from '@whiskeysockets/baileys';
-
 export interface ArgumentsAdapter {
-  getSocket(): WASocket;
-  getMessage(): WAMessage;
+  getMessage<T = any>(): T;
+  getAdapter<T = any>(): T;
 }
 
 export interface Arguments {

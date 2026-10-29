@@ -1,1 +1,1 @@
-export * from './socket-adapter';
+export * from './baileys.adapter';

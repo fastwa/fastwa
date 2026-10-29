@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-import { WASocket } from '@whiskeysockets/baileys';
-
 import {
   Type,
   Interaction,
@@ -17,16 +15,12 @@ import { FastwaContainer } from '../injector/container';
 import { MetadataScanner } from '../scanner/metadata-scanner';
 import { MAPPED_INTERACTION_MESSAGE } from '../helpers/messages.helper';
 
-import { AbstractSocketAdapter } from '../adapters';
-
 export class InteractionExplorer {
   private logger = new Logger(InteractionExplorer.name);
 
-  private socketRef: AbstractSocketAdapter;
   private metadataScanner: MetadataScanner;
 
   constructor(private readonly container: FastwaContainer) {
-    this.socketRef = this.container.getSocketRef();
     this.metadataScanner = new MetadataScanner();
   }
 
@@ -35,7 +29,7 @@ export class InteractionExplorer {
 
     modules.forEach((module, moduleName) => {
       this.registerCommands(moduleName, module.controllers);
-      this.applySocketToProperties(module.controllers);
+      this.bindAdapterProperties(module.controllers);
     });
   }
 
@@ -100,20 +94,22 @@ export class InteractionExplorer {
     });
   }
 
-  public applySocketToProperties(
+  public bindAdapterProperties(
     controllers: Map<IController, InstanceOptions>
   ) {
+    const adapter = this.container.getAdapter();
+
     controllers.forEach(({ instance }) => {
-      this.assignSocketToProperties(instance, this.socketRef.socket);
+      const properties = this.metadataScanner.scanAdapterProperties(instance);
+
+      for (const [property, resolve] of properties) {
+        Object.defineProperty(instance, property, {
+          get: () => resolve(adapter),
+          enumerable: true,
+          configurable: true
+        });
+      }
     });
-  }
-
-  public assignSocketToProperties(instance: Type<object>, clientRef: WASocket) {
-    const serverHooks = this.metadataScanner.scanServerHooks(instance);
-
-    for (const property of serverHooks) {
-      Reflect.set(instance, property, clientRef);
-    }
   }
 
   public reflectMetadata(target: Type<object>) {
