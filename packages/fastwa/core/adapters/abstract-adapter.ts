@@ -1,3 +1,5 @@
+import { FastwaMessage } from '../../common';
+
 import { AdapterHost } from './adapter-host.interface';
 
 /**
@@ -12,7 +14,7 @@ export abstract class AbstractAdapter {
   /**
    * Sends the value returned by a handler as a reply to the message
    */
-  abstract reply(message: unknown, response: unknown): Promise<unknown>;
+  abstract reply(message: FastwaMessage, response: unknown): Promise<unknown>;
 
   abstract close(): Promise<void>;
 }

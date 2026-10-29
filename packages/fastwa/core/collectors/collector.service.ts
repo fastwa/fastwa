@@ -1,5 +1,4 @@
-import { WAMessage } from '@whiskeysockets/baileys';
-import { Injectable } from '../../common';
+import { FastwaMessage, Injectable } from '../../common';
 
 import { FastwaContainer } from '../injector/container';
 import { CollectorOptions } from './collector';
@@ -12,12 +11,13 @@ export class CollectorService {
   /**
    * Creates a collector for the messages sent to a chat
    *
-   * @param jid Chat to collect from (PN or LID)
+   * @param chatId Chat to collect from (either ID format works when the
+   * platform has two, e.g. LID and phone number on WhatsApp)
    */
-  public create(jid: string, options?: CollectorOptions<WAMessage>) {
+  public create(chatId: string, options?: CollectorOptions<FastwaMessage>) {
     return new MessageCollector(
       this.container.getMessageCollectors(),
-      jid,
+      chatId,
       options
     );
   }
@@ -26,10 +26,10 @@ export class CollectorService {
    * Resolves with the collected messages once the collector ends
    */
   public awaitMessages(
-    jid: string,
-    options?: CollectorOptions<WAMessage>
-  ): Promise<WAMessage[]> {
-    const collector = this.create(jid, options);
+    chatId: string,
+    options?: CollectorOptions<FastwaMessage>
+  ): Promise<FastwaMessage[]> {
+    const collector = this.create(chatId, options);
     return new Promise((resolve) => collector.once('end', resolve));
   }
 
@@ -37,10 +37,10 @@ export class CollectorService {
    * Resolves with the next message, or `undefined` if the collector ends first
    */
   public async awaitMessage(
-    jid: string,
-    options?: Omit<CollectorOptions<WAMessage>, 'max'>
-  ): Promise<WAMessage | undefined> {
-    const [message] = await this.awaitMessages(jid, { ...options, max: 1 });
+    chatId: string,
+    options?: Omit<CollectorOptions<FastwaMessage>, 'max'>
+  ): Promise<FastwaMessage | undefined> {
+    const [message] = await this.awaitMessages(chatId, { ...options, max: 1 });
     return message;
   }
 }

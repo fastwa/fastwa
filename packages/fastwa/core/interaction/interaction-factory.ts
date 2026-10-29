@@ -1,13 +1,8 @@
 import {
-  WAMessage,
-  getContentType,
-  normalizeMessageContent,
-  proto
-} from '@whiskeysockets/baileys';
-
-import {
+  FastwaMessage,
   Interaction,
   mergeKeysAndValues,
+  ParamFactory,
   ParamType,
   isEmpty,
   isRegex,
@@ -19,72 +14,21 @@ import { createCommandRegex, MESSAGE_REGEX } from '../helpers';
 export class InteractionFactory {
   public paramForValue(
     paramType: ParamType,
-    property: string,
-    msg: WAMessage,
-    interactionName: string
-  ) {
-    const messageContent = this.getMessageContent(msg);
-    const messageParams = this.getMessageParams(
-      messageContent,
-      interactionName
-    );
-
-    return this.exchangeKeyForValue(
-      paramType,
-      property,
-      msg,
-      messageParams,
-      messageContent
-    );
-  }
-
-  public exchangeKeyForValue(
-    paramType: ParamType,
-    property: string,
-    msg: WAMessage,
-    messageParams: any,
-    messageContent: string
+    data: any,
+    message: FastwaMessage,
+    interactionName: string,
+    factory?: ParamFactory
   ) {
     switch (paramType) {
-      case ParamType.MESSAGE:
-        return property && msg ? msg[property] : msg;
-      case ParamType.REMOTE_JID:
-        return msg.key.remoteJid;
-      case ParamType.REMOTE_JID_ALT:
-        return msg.key.remoteJidAlt;
-      case ParamType.QUOTED:
-        return this.getQuotedMessage(msg);
-      case ParamType.CONTENT:
-        return messageContent;
-      case ParamType.ARGS:
-        return property ? messageParams[property] : messageParams;
+      case ParamType.ARGS: {
+        const params = this.getMessageParams(message.text, interactionName);
+        return data ? params?.[data] : params;
+      }
+      case ParamType.CUSTOM:
+        return factory(data, message);
       default:
         return null;
     }
-  }
-
-  public getMessageContent(msg: any) {
-    // Unwraps ephemeral, view-once, edited and document-with-caption messages
-    const content = normalizeMessageContent(msg.message);
-
-    return (
-      content?.conversation ||
-      content?.extendedTextMessage?.text ||
-      content?.imageMessage?.caption ||
-      content?.videoMessage?.caption ||
-      content?.documentMessage?.caption ||
-      content?.reactionMessage?.text ||
-      msg.reaction?.text
-    );
-  }
-
-  public getQuotedMessage(msg: WAMessage) {
-    const content = normalizeMessageContent(msg.message);
-    const message = content?.[getContentType(content)] as {
-      contextInfo?: proto.IContextInfo;
-    };
-
-    return normalizeMessageContent(message?.contextInfo?.quotedMessage);
   }
 
   public getMessageParams(messageContent: string, interactionName: string) {
@@ -128,6 +72,11 @@ export class InteractionFactory {
     messageContent: string,
     commands: Map<string, Interaction>
   ) {
+    // Commands match text; media without a caption has none
+    if (!isString(messageContent)) {
+      return;
+    }
+
     const commandsCollection = [...commands.values()];
 
     const interaction = commandsCollection.find(({ command }) => {

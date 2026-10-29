@@ -1,3 +1,5 @@
+import { FastwaMessage } from '../../common';
+
 /**
  * The application side of an adapter: adapters translate platform events
  * into calls to their host
@@ -8,7 +10,7 @@ export interface AdapterHost {
    */
   readonly events: string[];
 
-  handleMessage(message: unknown): Promise<void>;
-  handleReaction(reaction: unknown): Promise<void>;
+  handleMessage(message: FastwaMessage): Promise<void>;
+  handleReaction(reaction: FastwaMessage): Promise<void>;
   handleEvent(event: string, payload: unknown): Promise<void>;
 }

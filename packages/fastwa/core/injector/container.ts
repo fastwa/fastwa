@@ -1,10 +1,10 @@
-import { WAMessage } from '@whiskeysockets/baileys';
 import {
   Type,
   Interaction,
   IController,
   IProvider,
-  DynamicModule
+  DynamicModule,
+  FastwaMessage
 } from '../../common';
 
 import { Module } from './module';
@@ -23,7 +23,7 @@ export class FastwaContainer {
   private readonly modules = new ModulesContainer();
   private readonly collection = new CollectionContainer();
   private readonly moduleCompiler = new ModuleCompiler();
-  private readonly messageCollectors = new CollectorRegistry<WAMessage>();
+  private readonly messageCollectors = new CollectorRegistry<FastwaMessage>();
   private readonly dynamicModulesMetadata = new Map<
     string,
     Partial<DynamicModule>
