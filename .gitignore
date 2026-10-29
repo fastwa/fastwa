@@ -43,6 +43,7 @@ bower_components
 
 # Samples: only official samples are tracked
 sample/*
+!sample/00-basics/
 !sample/01-ai-sdk/
 
 # OS metadata

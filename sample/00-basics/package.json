@@ -1,0 +1,30 @@
+{
+  "name": "fastwa-sample-basics",
+  "version": "1.0.0",
+  "description": "Fastwa sample: the framework basics in a small WhatsApp bot",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsc && npm start"
+  },
+  "dependencies": {
+    "@fastwa/builders": "file:../../packages/builders",
+    "@fastwa/client": "file:../../packages/client",
+    "@fastwa/common": "file:../../packages/common",
+    "@fastwa/core": "file:../../packages/core",
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "qrcode-terminal": "^0.12.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/qrcode-terminal": "^0.12.2",
+    "typescript": "^5.5.4"
+  }
+}
