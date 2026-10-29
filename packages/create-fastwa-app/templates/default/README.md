@@ -18,7 +18,7 @@ The session is saved in `auth/`; delete it to pair again.
 
 | File | Role |
 |---|---|
-| `src/main.ts` | Creates the app with `FastwaFactory` and Baileys' `useMultiFileAuthState` |
+| `src/main.ts` | Creates the app with `FastwaFactory` and a `BaileysAdapter` using Baileys' `useMultiFileAuthState` |
 | `src/app.module.ts` | Declares the controller and the provider |
 | `src/app.controller.ts` | The `!hello` command and QR rendering via `@On('connection.update')` |
 | `src/app.service.ts` | An `@Injectable()` service, injected into the controller |
