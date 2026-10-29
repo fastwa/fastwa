@@ -1,52 +1,44 @@
-<p align="center">
-  <a href="https://github.com/fastwa/fastwa" target="blank">
-    <img src="https://avatars.githubusercontent.com/u/118643349" width="120" alt="Logo" />
-  </a>
-</p>
+# @fastwa/baileys
 
-<p align="center">
-  <p align="center">
-   Next-generation framework for building efficient, reliable and scalable chatbots.
-    <br/>
-    <br/>
-  </p>
-</p>
+[Baileys](https://github.com/WhiskeySockets/Baileys) adapter for [fastwa](https://www.npmjs.com/package/fastwa): connects a fastwa app to WhatsApp through the WhatsApp Web protocol.
 
-<p align="center">
-  <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/stars/fastwa/fastwa" alt="Stargazers" />
-  </a>
-  <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/issues/fastwa/fastwa" alt="Issues" />
-  </a>
-</p>
+```bash
+npm install fastwa @fastwa/baileys @whiskeysockets/baileys@7.0.0-rc14
+```
 
-## Description
+## Usage
 
-Fastwa is an open source project and an excellent way if you want an easy start. Perfect for building efficient and scalable [Whatsapp](https://web.whatsapp.com) applications.
+```ts
+import { useMultiFileAuthState } from '@whiskeysockets/baileys';
+import { FastwaFactory } from 'fastwa';
+import { BaileysAdapter } from '@fastwa/baileys';
 
-## Getting started
-* To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). :books:
-* [가이드](https://docs.fastwa.org) 문서는 [docs.fastwa.org](https://docs.fastwa.org)에서 확인하실 수 있습니다. :books:
-* [ガイド](https://docs.fastwa.org)は [docs.fastwa.org](https://docs.fastwa.org)でご確認ください。 :books:
+const { state, saveCreds } = await useMultiFileAuthState('auth');
 
+const app = await FastwaFactory.create(
+  AppModule,
+  new BaileysAdapter({ auth: state, saveCreds })
+);
 
-## Contributing
-### Contributing Guidelines
-Read through our [contributing guidelines](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md) to learn about our submission process, coding rules, and more.
+await app.listen();
+```
 
-### Code of Conduct
-Help us keep **fastwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
+`BaileysAdapter` takes [Baileys' socket options](https://baileys.wiki) plus `saveCreds`, called on every `creds.update`. It does not render QR codes: handle the `qr` field of `connection.update` with `@On('connection.update')`.
 
-## Acknowledgments
-Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
+## Decorators and APIs
 
-## Stay in touch
+| API | Description |
+|---|---|
+| `@Message(property?)` | The `WAMessage` as received, or one of its properties |
+| `@Content()` | Text, media caption or reaction emoji |
+| `@Quoted()` | The message being replied to (`proto.IMessage`) |
+| `@RemoteJid()`, `@RemoteJidAlt()` | The chat JID as received and its alternate format (LID or phone number) |
+| `@Socket()` | Controller property with the current Baileys socket; it follows the socket after a reconnect |
+| `WAEvent` | Baileys event names, for `@On()` |
+| `toFastwaMessage()` | Converts a `WAMessage` into a `FastwaMessage` |
 
-* Author - [Natan Rodrigues](https://github.com/Nata4n)
-* Website - [https://fastwa.org](https://fastwa.org)
-* E-mail - [natanrce@proton.me](mailto:natanrce@proton.me)
+Framework decorators (`@Controller()`, `@Command()`, `@On()`, `@UseGuards()`, `@Args()`...) come from `fastwa`.
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
+[MIT](https://github.com/fastwa/fastwa/blob/canary/LICENSE)
