@@ -94,7 +94,7 @@ export class InteractionProxy {
   public getParamtypes(
     instance: Type<object>,
     method: string,
-    interactionName: string
+    interactionName: string | RegExp
   ) {
     const metadata =
       Reflect.getMetadata(
@@ -125,7 +125,7 @@ export class InteractionProxy {
   public exchangeKeyForValue(
     keys: string[],
     metadata: any,
-    interactionName: string
+    interactionName: string | RegExp
   ) {
     return keys.map((key) => {
       const { index, data, factory } = metadata[key];

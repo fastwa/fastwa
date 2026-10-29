@@ -16,7 +16,7 @@ export class InteractionFactory {
     paramType: ParamType,
     data: any,
     message: FastwaMessage,
-    interactionName: string,
+    interactionName: string | RegExp,
     factory?: ParamFactory
   ) {
     switch (paramType) {
@@ -31,7 +31,10 @@ export class InteractionFactory {
     }
   }
 
-  public getMessageParams(messageContent: string, interactionName: string) {
+  public getMessageParams(
+    messageContent: string,
+    interactionName: string | RegExp
+  ) {
     const keys = this.getKeys(interactionName);
     const regex = this.getRegex(interactionName);
 
@@ -44,7 +47,7 @@ export class InteractionFactory {
     return mergeKeysAndValues(keys, values?.slice(1));
   }
 
-  public getKeys(interactionName: string) {
+  public getKeys(interactionName: string | RegExp) {
     return isString(interactionName)
       ? interactionName.match(MESSAGE_REGEX.PARAM_KEYS) || []
       : [];
@@ -70,7 +73,7 @@ export class InteractionFactory {
 
   public getInteraction(
     messageContent: string,
-    commands: Map<string, Interaction>
+    commands: Map<string | RegExp, Interaction>
   ) {
     // Commands match text; media without a caption has none
     if (!isString(messageContent)) {

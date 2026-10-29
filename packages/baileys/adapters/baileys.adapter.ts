@@ -14,17 +14,15 @@ import {
   AdapterHost,
   FastwaMessage,
   LogLevels,
-  ReactionMessage,
-  SocketConnectionState,
-  SocketOptions,
-  WAEvent,
   isFunction,
   isString
 } from 'fastwa';
 
 import { Boom } from '@hapi/boom';
 
+import { SocketConnectionState, WAEvent } from '../enums';
 import { toFastwaMessage, toFastwaReaction } from '../helpers';
+import { BaileysAdapterOptions, ReactionMessage } from '../interfaces';
 
 export class BaileysAdapter extends AbstractAdapter {
   /**
@@ -34,7 +32,7 @@ export class BaileysAdapter extends AbstractAdapter {
 
   private host: AdapterHost;
 
-  constructor(private readonly options: SocketOptions) {
+  constructor(private readonly options: BaileysAdapterOptions) {
     super();
   }
 
