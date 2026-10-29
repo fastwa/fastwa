@@ -1,52 +1,60 @@
-<p align="center">
-  <a href="https://github.com/fastwa/fastwa" target="blank">
-    <img src="https://avatars.githubusercontent.com/u/118643349" width="120" alt="Logo" />
-  </a>
-</p>
+# fastwa
 
-<p align="center">
-  <p align="center">
-   Next-generation framework for building efficient, reliable and scalable chatbots.
-    <br/>
-    <br/>
-  </p>
-</p>
+A framework for building WhatsApp chatbots with modules, controllers, providers and dependency injection, in the style of NestJS.
 
-<p align="center">
-  <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/stars/fastwa/fastwa" alt="Stargazers" />
-  </a>
-  <a href="https://github.com/fastwa/fastwa" target="_blank">
-    <img src="https://img.shields.io/github/issues/fastwa/fastwa" alt="Issues" />
-  </a>
-</p>
-
-## Description
-
-Fastwa is an open source project and an excellent way if you want an easy start. Perfect for building efficient and scalable [Whatsapp](https://web.whatsapp.com) applications.
+`fastwa` is platform-independent: it connects to WhatsApp through an adapter, such as [`@fastwa/baileys`](https://www.npmjs.com/package/@fastwa/baileys).
 
 ## Getting started
-* To check out the [guide](https://docs.fastwa.org), visit [docs.fastwa.org](https://docs.fastwa.org). :books:
-* [가이드](https://docs.fastwa.org) 문서는 [docs.fastwa.org](https://docs.fastwa.org)에서 확인하실 수 있습니다. :books:
-* [ガイド](https://docs.fastwa.org)は [docs.fastwa.org](https://docs.fastwa.org)でご確認ください。 :books:
 
+```bash
+npx create-fastwa-app@latest
+```
 
-## Contributing
-### Contributing Guidelines
-Read through our [contributing guidelines](https://github.com/fastwa/fastwa/blob/main/CONTRIBUTING.md) to learn about our submission process, coding rules, and more.
+Or add it to an existing project:
 
-### Code of Conduct
-Help us keep **fastwa** open and inclusive. Please read and follow our [Code of Conduct](https://github.com/fastwa/fastwa/blob/main/CODE_OF_CONDUCT.md).
+```bash
+npm install fastwa @fastwa/baileys @whiskeysockets/baileys@7.0.0-rc14 reflect-metadata
+```
 
-## Acknowledgments
-Special thanks to [@mrdiniz88](https://github.com/mrdiniz88) for inspiration.
+```ts
+import 'reflect-metadata';
 
-## Stay in touch
+import { useMultiFileAuthState } from '@whiskeysockets/baileys';
+import { Command, Controller, FastwaFactory, Module } from 'fastwa';
+import { BaileysAdapter, Message } from '@fastwa/baileys';
 
-* Author - [Natan Rodrigues](https://github.com/Nata4n)
-* Website - [https://fastwa.org](https://fastwa.org)
-* E-mail - [natanrce@proton.me](mailto:natanrce@proton.me)
+@Controller()
+class AppController {
+  @Command('!hello')
+  hello(@Message('pushName') name?: string) {
+    return `Hello, ${name ?? 'there'}!`;
+  }
+}
+
+@Module({ controllers: [AppController] })
+class AppModule {}
+
+async function bootstrap() {
+  const { state, saveCreds } = await useMultiFileAuthState('auth');
+
+  const app = await FastwaFactory.create(
+    AppModule,
+    new BaileysAdapter({ auth: state, saveCreds })
+  );
+
+  await app.listen();
+}
+
+bootstrap();
+```
+
+Enable `experimentalDecorators` and `emitDecoratorMetadata` in your `tsconfig.json`.
+
+## Learn more
+
+- [Documentation](https://fastwa.org/docs)
+- [Migrating from 1.x](https://github.com/fastwa/fastwa/blob/canary/MIGRATION.md)
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/fastwa/fastwa/blob/main/LICENSE) for more information.
+[MIT](https://github.com/fastwa/fastwa/blob/canary/LICENSE)
