@@ -17,8 +17,6 @@ npm install fastwa @fastwa/baileys @whiskeysockets/baileys@7.0.0-rc14 reflect-me
 ```
 
 ```ts
-import 'reflect-metadata';
-
 import { useMultiFileAuthState } from '@whiskeysockets/baileys';
 import { Command, Controller, FastwaFactory, Module } from 'fastwa';
 import { BaileysAdapter, Message } from '@fastwa/baileys';
